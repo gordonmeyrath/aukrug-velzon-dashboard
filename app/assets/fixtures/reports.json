@@ -1,0 +1,232 @@
+{
+  "reports": [
+    {
+      "id": 1,
+      "title": "Schlagloch in der Hauptstraße",
+      "description": "Großes Schlagloch vor Hausnummer 23 in der Hauptstraße. Gefahr für Radfahrer und Fußgänger.",
+      "category": "roads_traffic",
+      "priority": "high",
+      "status": "in_progress",
+      "location": {
+        "latitude": 53.9876,
+        "longitude": 9.7654,
+        "address": "Hauptstraße 23, 24613 Aukrug",
+        "description": "Vor dem Bäckerei-Eingang",
+        "landmark": "Bäckerei Schmidt"
+      },
+      "imageUrls": ["https://example.com/images/schlagloch1.jpg"],
+      "contactName": "Hans Müller",
+      "contactEmail": "hans.mueller@email.com",
+      "contactPhone": "+49 4321 123456",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-20T10:30:00Z",
+      "updatedAt": "2025-08-22T14:15:00Z",
+      "municipalityResponse": "Reparatur wurde beauftragt und wird in den nächsten 5 Werktagen durchgeführt.",
+      "responseAt": "2025-08-21T09:00:00Z",
+      "referenceNumber": "AUK-20250820-001"
+    },
+    {
+      "id": 2,
+      "title": "Defekte Straßenlaterne",
+      "description": "Straßenlaterne am Parkplatz hinter der Kirche ist seit 3 Tagen defekt. Sehr dunkler Bereich.",
+      "category": "public_lighting",
+      "priority": "medium",
+      "status": "received",
+      "location": {
+        "latitude": 53.9901,
+        "longitude": 9.7632,
+        "address": "Kirchenweg 5, 24613 Aukrug",
+        "description": "Parkplatz hinter der St. Bartholomäus Kirche",
+        "landmark": "St. Bartholomäus Kirche"
+      },
+      "imageUrls": ["https://example.com/images/laterne1.jpg", "https://example.com/images/laterne2.jpg"],
+      "contactName": "Maria Schmidt",
+      "contactEmail": "maria.schmidt@email.com",
+      "contactPhone": "+49 4321 987654",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-25T18:45:00Z",
+      "updatedAt": "2025-08-25T18:45:00Z",
+      "referenceNumber": "AUK-20250825-002"
+    },
+    {
+      "id": 3,
+      "title": "Illegal abgelagerte Müllsäcke",
+      "description": "Mehrere Müllsäcke wurden illegal am Waldrand abgelegt. Möglicherweise Gewerbemüll.",
+      "category": "waste_management",
+      "priority": "medium",
+      "status": "resolved",
+      "location": {
+        "latitude": 53.9845,
+        "longitude": 9.7598,
+        "address": "Waldweg, 24613 Aukrug",
+        "description": "Am Waldrand, ca. 200m vom Wanderparkplatz",
+        "landmark": "Wanderparkplatz Waldweg"
+      },
+      "imageUrls": ["https://example.com/images/muell1.jpg"],
+      "isAnonymous": true,
+      "submittedAt": "2025-08-15T12:00:00Z",
+      "updatedAt": "2025-08-18T16:30:00Z",
+      "municipalityResponse": "Müll wurde durch Bauhof entsorgt. Vielen Dank für den Hinweis.",
+      "responseAt": "2025-08-16T08:00:00Z",
+      "referenceNumber": "AUK-20250815-003"
+    },
+    {
+      "id": 4,
+      "title": "Verwachsener Radweg",
+      "description": "Der Radweg entlang der L240 ist stark verwachsen und kaum noch befahrbar.",
+      "category": "parks_green_spaces",
+      "priority": "low",
+      "status": "submitted",
+      "location": {
+        "latitude": 53.9912,
+        "longitude": 9.7701,
+        "address": "L240 Richtung Hohenwestedt, 24613 Aukrug",
+        "description": "Radweg entlang der Landesstraße",
+        "landmark": "Ortsausgang Richtung Hohenwestedt"
+      },
+      "contactName": "Peter Fahrmann",
+      "contactEmail": "peter.fahrmann@email.com",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-28T07:15:00Z",
+      "updatedAt": "2025-08-28T07:15:00Z",
+      "referenceNumber": "AUK-20250828-004"
+    },
+    {
+      "id": 5,
+      "title": "Verstopfter Gully nach Regen",
+      "description": "Gully in der Dorfstraße ist verstopft, Wasser steht nach Regenfällen.",
+      "category": "water_drainage",
+      "priority": "high",
+      "status": "in_progress",
+      "location": {
+        "latitude": 53.9889,
+        "longitude": 9.7678,
+        "address": "Dorfstraße 15, 24613 Aukrug",
+        "description": "Vor dem Gemeindehaus",
+        "landmark": "Gemeindehaus Aukrug"
+      },
+      "imageUrls": ["https://example.com/images/gully1.jpg"],
+      "contactName": "Gemeinde Aukrug",
+      "contactEmail": "info@aukrug.de",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-26T14:20:00Z",
+      "updatedAt": "2025-08-27T10:00:00Z",
+      "municipalityResponse": "Bauhof wurde informiert, Reinigung erfolgt diese Woche.",
+      "responseAt": "2025-08-27T10:00:00Z",
+      "referenceNumber": "AUK-20250826-005"
+    },
+    {
+      "id": 6,
+      "title": "Graffiti an Bushaltestelle",
+      "description": "Bushaltestelle wurde mit Graffiti beschmiert. Teilweise obszöne Inhalte.",
+      "category": "vandalism",
+      "priority": "medium",
+      "status": "received",
+      "location": {
+        "latitude": 53.9923,
+        "longitude": 9.7645,
+        "address": "Schulstraße, 24613 Aukrug",
+        "description": "Bushaltestelle gegenüber der Grundschule",
+        "landmark": "Grundschule Aukrug"
+      },
+      "imageUrls": ["https://example.com/images/graffiti1.jpg", "https://example.com/images/graffiti2.jpg"],
+      "isAnonymous": true,
+      "submittedAt": "2025-08-27T16:30:00Z",
+      "updatedAt": "2025-08-27T16:30:00Z",
+      "referenceNumber": "AUK-20250827-006"
+    },
+    {
+      "id": 7,
+      "title": "Baumstamm blockiert Wanderweg",
+      "description": "Nach dem letzten Sturm blockiert ein umgestürzter Baum den Wanderweg im Naturschutzgebiet.",
+      "category": "environmental",
+      "priority": "medium",
+      "status": "submitted",
+      "location": {
+        "latitude": 53.9798,
+        "longitude": 9.7543,
+        "address": "Naturschutzgebiet Aukrugwiesen, 24613 Aukrug",
+        "description": "Wanderweg ca. 500m vom Eingang",
+        "landmark": "Naturschutzgebiet Aukrugwiesen"
+      },
+      "imageUrls": ["https://example.com/images/baum1.jpg"],
+      "contactName": "Wanderverein Aukrug",
+      "contactEmail": "info@wanderverein-aukrug.de",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-29T11:45:00Z",
+      "updatedAt": "2025-08-29T11:45:00Z",
+      "referenceNumber": "AUK-20250829-007"
+    },
+    {
+      "id": 8,
+      "title": "Fehlende Rollstuhlrampe am Rathaus",
+      "description": "Der Haupteingang des Rathauses ist für Rollstuhlfahrer nicht zugänglich. Barrierefreier Zugang fehlt.",
+      "category": "accessibility",
+      "priority": "high",
+      "status": "received",
+      "location": {
+        "latitude": 53.9890,
+        "longitude": 9.7680,
+        "address": "Rathausplatz 1, 24613 Aukrug",
+        "description": "Haupteingang des Rathauses",
+        "landmark": "Rathaus Aukrug"
+      },
+      "contactName": "Behindertenverband Aukrug",
+      "contactEmail": "beratung@behindertenverband-aukrug.de",
+      "contactPhone": "+49 4321 555123",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-24T09:00:00Z",
+      "updatedAt": "2025-08-25T13:30:00Z",
+      "municipalityResponse": "Antrag auf Förderung für barrierefreien Umbau ist gestellt. Mehr Informationen folgen.",
+      "responseAt": "2025-08-25T13:30:00Z",
+      "referenceNumber": "AUK-20250824-008"
+    },
+    {
+      "id": 9,
+      "title": "Spielplatz-Schaukel defekt",
+      "description": "Eine der Schaukeln auf dem Spielplatz am Dorfteich ist kaputt. Kette gerissen.",
+      "category": "public_facilities",
+      "priority": "medium",
+      "status": "resolved",
+      "location": {
+        "latitude": 53.9867,
+        "longitude": 9.7612,
+        "address": "Am Dorfteich, 24613 Aukrug",
+        "description": "Spielplatz am Dorfteich",
+        "landmark": "Dorfteich"
+      },
+      "imageUrls": ["https://example.com/images/schaukel1.jpg"],
+      "contactName": "Elterninitiative Aukrug",
+      "contactEmail": "eltern@aukrug-kinder.de",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-18T15:20:00Z",
+      "updatedAt": "2025-08-23T12:00:00Z",
+      "municipalityResponse": "Schaukel wurde repariert und ist wieder sicher benutzbar.",
+      "responseAt": "2025-08-23T12:00:00Z",
+      "referenceNumber": "AUK-20250818-009"
+    },
+    {
+      "id": 10,
+      "title": "Lärm durch Bauarbeiten außerhalb der Ruhezeiten",
+      "description": "Bauarbeiten finden regelmäßig vor 7:00 Uhr und nach 20:00 Uhr statt. Belästigung für Anwohner.",
+      "category": "other",
+      "priority": "medium",
+      "status": "in_progress",
+      "location": {
+        "latitude": 53.9934,
+        "longitude": 9.7589,
+        "address": "Neubaugebiet Aukrug-Nord, 24613 Aukrug",
+        "description": "Baustelle im Neubaugebiet",
+        "landmark": "Neubaugebiet Nord"
+      },
+      "contactName": "Anwohnergemeinschaft Nord",
+      "contactEmail": "anwohner@aukrug-nord.de",
+      "isAnonymous": false,
+      "submittedAt": "2025-08-22T20:15:00Z",
+      "updatedAt": "2025-08-26T09:45:00Z",
+      "municipalityResponse": "Baufirma wurde kontaktiert. Arbeitszeiten werden überprüft und angepasst.",
+      "responseAt": "2025-08-26T09:45:00Z",
+      "referenceNumber": "AUK-20250822-010"
+    }
+  ]
+}

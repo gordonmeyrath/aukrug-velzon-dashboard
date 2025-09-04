@@ -45,7 +45,7 @@ class ResidentShell extends StatelessWidget {
     if (location.contains('/notices')) return 0;
     if (location.contains('/events')) return 1;
     if (location.contains('/downloads')) return 2;
-    if (location.contains('/report')) return 3;
+    if (location.contains('/reports') || location.contains('/report')) return 3;
     if (location.contains('/settings')) return 4;
     return 0;
   }
@@ -62,7 +62,7 @@ class ResidentShell extends StatelessWidget {
         context.go('/resident/downloads');
         break;
       case 3:
-        context.go('/resident/report');
+        context.go('/resident/reports');
         break;
       case 4:
         context.go('/resident/settings');

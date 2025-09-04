@@ -2,47 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../localization/app_localizations.dart';
+import '../domain/report.dart';
+import 'reports_provider.dart';
 
-// Report categories
-enum ReportCategory {
-  infrastructure,
-  environment,
-  safety,
-  lighting,
-  cleanliness,
-  other;
-
-  String get displayName {
-    switch (this) {
-      case ReportCategory.infrastructure:
-        return 'Infrastruktur';
-      case ReportCategory.environment:
-        return 'Umwelt';
-      case ReportCategory.safety:
-        return 'Sicherheit';
-      case ReportCategory.lighting:
-        return 'Beleuchtung';
-      case ReportCategory.cleanliness:
-        return 'Sauberkeit';
-      case ReportCategory.other:
-        return 'Sonstiges';
-    }
-  }
-
+/// Helper extension to get icons for report categories
+extension ReportCategoryExtension on ReportCategory {
   IconData get icon {
     switch (this) {
-      case ReportCategory.infrastructure:
-        return Icons.construction;
-      case ReportCategory.environment:
-        return Icons.park;
-      case ReportCategory.safety:
-        return Icons.security;
-      case ReportCategory.lighting:
+      case ReportCategory.roadsTraffic:
+        return Icons.directions_car;
+      case ReportCategory.publicLighting:
         return Icons.lightbulb;
-      case ReportCategory.cleanliness:
-        return Icons.cleaning_services;
-      case ReportCategory.other:
+      case ReportCategory.wasteManagement:
+        return Icons.delete;
+      case ReportCategory.parksGreenSpaces:
+        return Icons.park;
+      case ReportCategory.waterDrainage:
+        return Icons.water_drop;
+      case ReportCategory.publicFacilities:
+        return Icons.domain;
+      case ReportCategory.vandalism:
         return Icons.report_problem;
+      case ReportCategory.environmental:
+        return Icons.eco;
+      case ReportCategory.accessibility:
+        return Icons.accessible;
+      case ReportCategory.other:
+        return Icons.help_outline;
     }
   }
 }
@@ -59,7 +45,12 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
-  ReportCategory _selectedCategory = ReportCategory.infrastructure;
+  final _contactNameController = TextEditingController();
+  final _contactEmailController = TextEditingController();
+  final _contactPhoneController = TextEditingController();
+  
+  ReportCategory _selectedCategory = ReportCategory.roadsTraffic;
+  ReportPriority _selectedPriority = ReportPriority.medium;
   bool _isSubmitting = false;
 
   @override
@@ -67,6 +58,9 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _contactNameController.dispose();
+    _contactEmailController.dispose();
+    _contactPhoneController.dispose();
     super.dispose();
   }
 
@@ -138,6 +132,46 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
               ),
             ),
             
+            const SizedBox(height: 16),
+
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Priorität',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: ReportPriority.values.map((priority) {
+                        final isSelected = _selectedPriority == priority;
+                        return FilterChip(
+                          selected: isSelected,
+                          label: Text(priority.displayName),
+                          backgroundColor: isSelected 
+                              ? _getPriorityColor(priority).withOpacity(0.3)
+                              : null,
+                          selectedColor: _getPriorityColor(priority).withOpacity(0.5),
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() {
+                                _selectedPriority = priority;
+                              });
+                            }
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 16),
 
             Card(
@@ -247,6 +281,62 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      'Kontaktinformationen (optional)',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Für Rückfragen und Status-Updates',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    TextFormField(
+                      controller: _contactNameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    TextFormField(
+                      controller: _contactEmailController,
+                      decoration: const InputDecoration(
+                        labelText: 'E-Mail',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.email),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
+                    TextFormField(
+                      controller: _contactPhoneController,
+                      decoration: const InputDecoration(
+                        labelText: 'Telefon',
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.phone),
+                      ),
+                      keyboardType: TextInputType.phone,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       'Fotos hinzufügen (optional)',
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
@@ -320,8 +410,37 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
     });
 
     try {
-      // TODO: Implement actual submission to backend
-      await Future.delayed(const Duration(seconds: 2)); // Simulate network delay
+      // Create report object
+      final report = Report(
+        id: DateTime.now().millisecondsSinceEpoch,
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        category: _selectedCategory,
+        priority: _selectedPriority,
+        status: ReportStatus.submitted,
+        location: ReportLocation(
+          latitude: 54.3233, // Default Aukrug coordinates
+          longitude: 9.7500,
+          address: _locationController.text.trim(),
+        ),
+        contactName: _contactNameController.text.trim().isNotEmpty 
+            ? _contactNameController.text.trim() 
+            : null,
+        contactEmail: _contactEmailController.text.trim().isNotEmpty 
+            ? _contactEmailController.text.trim() 
+            : null,
+        contactPhone: _contactPhoneController.text.trim().isNotEmpty 
+            ? _contactPhoneController.text.trim() 
+            : null,
+        isAnonymous: _contactNameController.text.trim().isEmpty &&
+                    _contactEmailController.text.trim().isEmpty &&
+                    _contactPhoneController.text.trim().isEmpty,
+        submittedAt: DateTime.now(),
+      );
+
+      // Submit using provider
+      final submissionNotifier = ref.read(reportSubmissionProvider.notifier);
+      await submissionNotifier.submitReport(report);
 
       if (mounted) {
         _showSuccessDialog();
@@ -427,5 +546,19 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
         ],
       ),
     );
+  }
+
+  /// Get color for priority level
+  Color _getPriorityColor(ReportPriority priority) {
+    switch (priority) {
+      case ReportPriority.low:
+        return Colors.green;
+      case ReportPriority.medium:
+        return Colors.orange;
+      case ReportPriority.high:
+        return Colors.red;
+      case ReportPriority.urgent:
+        return Colors.purple;
+    }
   }
 }
