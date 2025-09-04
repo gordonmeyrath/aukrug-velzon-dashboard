@@ -9,6 +9,7 @@ import '../features/places/presentation/places_list_page.dart';
 import '../features/reports/presentation/report_issue_page.dart';
 import '../features/shell/presentation/audience_picker_page.dart';
 import '../features/shell/presentation/resident_shell.dart';
+import '../features/documents/presentation/downloads_center_page.dart';
 import '../features/shell/presentation/tourist_shell.dart';
 
 part 'app_router.g.dart';
@@ -71,7 +72,7 @@ GoRouter appRouter(AppRouterRef ref) {
           ),
           GoRoute(
             path: '/resident/downloads',
-            builder: (context, state) => const DownloadsPage(),
+            builder: (context, state) => const DownloadsCenterPage(),
           ),
           GoRoute(
             path: '/resident/report',
