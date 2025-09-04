@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/services/location_service.dart';
+
 /// Interactive map widget for displaying Aukrug locations
-///
+/// 
 /// Displays places, events, and other points of interest on an OpenStreetMap
 /// base layer with support for markers, user location, and zoom controls.
-class AukrugMap extends StatefulWidget {
+class AukrugMap extends ConsumerStatefulWidget {
   const AukrugMap({
     super.key,
     this.center,
@@ -20,30 +23,28 @@ class AukrugMap extends StatefulWidget {
 
   /// Initial center position of the map (defaults to Aukrug center)
   final LatLng? center;
-
+  
   /// Initial zoom level
   final double zoom;
-
+  
   /// List of markers to display on the map
   final List<Marker> markers;
-
+  
   /// Whether to show user's current location
   final bool showUserLocation;
-
+  
   /// Callback when map is tapped
   final void Function(LatLng)? onMapTap;
-
+  
   /// Callback when a marker is tapped
   final void Function(Marker)? onMarkerTap;
-
+  
   /// Fixed height for the map (if null, expands to parent)
   final double? height;
 
   @override
-  State<AukrugMap> createState() => _AukrugMapState();
-}
-
-class _AukrugMapState extends State<AukrugMap> {
+  ConsumerState<AukrugMap> createState() => _AukrugMapState();
+}class _AukrugMapState extends ConsumerState<AukrugMap> {
   late final MapController _mapController;
 
   // Aukrug center coordinates (approximate)
@@ -65,6 +66,11 @@ class _AukrugMapState extends State<AukrugMap> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    
+    // Watch user location if enabled
+    final userLocationAsync = widget.showUserLocation 
+        ? ref.watch(currentLocationProvider)
+        : const AsyncValue.data(null);
 
     Widget mapWidget = FlutterMap(
       mapController: _mapController,
@@ -110,6 +116,41 @@ class _AukrugMapState extends State<AukrugMap> {
                 ),
               );
             }).toList(),
+          ),
+        
+        // User location marker
+        if (widget.showUserLocation)
+          userLocationAsync.when(
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+            data: (userLocation) {
+              if (userLocation == null) return const SizedBox.shrink();
+              
+              return MarkerLayer(
+                markers: [
+                  Marker(
+                    point: userLocation,
+                    width: 20,
+                    height: 20,
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 3),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
       ],
     );
@@ -160,11 +201,27 @@ class _AukrugMapState extends State<AukrugMap> {
 
                 // Center on Aukrug button
                 _MapControlButton(
-                  icon: Icons.my_location,
+                  icon: Icons.home,
                   onTap: () => _mapController.move(_aukrugCenter, 13.0),
                   backgroundColor: colorScheme.surface,
                   foregroundColor: colorScheme.onSurface,
                 ),
+                
+                // My location button (only if location is enabled)
+                if (widget.showUserLocation) ...[
+                  const SizedBox(height: 8),
+                  _MapControlButton(
+                    icon: Icons.my_location,
+                    onTap: () async {
+                      final location = await ref.read(currentLocationProvider.future);
+                      if (location != null) {
+                        _mapController.move(location, 16.0);
+                      }
+                    },
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
+                  ),
+                ],
               ],
             ),
           ),

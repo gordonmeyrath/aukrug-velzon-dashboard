@@ -71,6 +71,7 @@ class _PlacesMapPageState extends ConsumerState<PlacesMapPage> {
             children: [
               AukrugMap(
                 markers: markers,
+                showUserLocation: true,
                 onMarkerTap: (marker) {
                   // Find place for this marker
                   final markerIndex = markers.indexOf(marker);

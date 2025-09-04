@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../localization/app_localizations.dart';
 import '../domain/place.dart';
 import '../providers/places_provider.dart';
+import 'nearby_places_page.dart';
 import 'places_map_page.dart';
 
 class PlacesListPage extends ConsumerWidget {
@@ -19,12 +20,22 @@ class PlacesListPage extends ConsumerWidget {
         title: Text(l10n.places),
         actions: [
           IconButton(
+            icon: const Icon(Icons.near_me),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const NearbyPlacesPage()),
+              );
+            },
+            tooltip: 'In meiner Nähe',
+          ),
+          IconButton(
             icon: const Icon(Icons.map),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => const PlacesMapPage()),
               );
             },
+            tooltip: 'Kartenansicht',
           ),
         ],
       ),

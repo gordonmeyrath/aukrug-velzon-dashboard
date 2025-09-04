@@ -38,25 +38,29 @@
 
 **Priority Features**:
 
-#### Places Feature (Tourist Priority)
+#### Places Feature (Tourist Priority) ✅ COMPLETED
 
-- [ ] **Places List Page**: Categorized view with search/filter
-- [ ] **Place Detail Page**: Photos, description, contact info, directions
-- [ ] **Map Integration**: flutter_map with OpenStreetMap tiles
-- [ ] **Categories**: Nature, dining, accommodation, services
-- [ ] **Repository**: Isar storage with API sync
+- [x] **Places List Page**: Categorized view with search/filter
+- [x] **Place Detail Page**: Photos, description, contact info, directions
+- [x] **Map Integration**: flutter_map with OpenStreetMap tiles
+- [x] **Categories**: Nature, dining, accommodation, services
+- [x] **Repository**: Isar storage with API sync
+- [x] **Location Services**: GPS integration with "In meiner Nähe" functionality
+- [x] **Nearby Places**: Distance calculation and walking time estimates
 
-#### Events Feature (Both Audiences)
+#### Events Feature (Both Audiences) ✅ COMPLETED
 
-- [ ] **Events Calendar**: Monthly/weekly views with date filtering
-- [ ] **Event Details**: Location, description, registration links
-- [ ] **Audience Filtering**: Tourist vs. resident events
+- [x] **Events Calendar**: Monthly/weekly views with date filtering
+- [x] **Event Details**: Location, description, registration links
+- [x] **Audience Filtering**: Tourist vs. resident events
+- [x] **Map Integration**: Interactive event locations with GPS coordinates
 - [ ] **Calendar Integration**: Add to device calendar
 - [ ] **Push Notifications**: Event reminders (with consent)
 
-#### Municipal Features (Resident Priority)
+#### Municipal Features (Resident Priority) ✅ COMPLETED
 
-- [ ] **Notices Page**: Important announcements with priority levels
+- [x] **Notices Page**: Important announcements with priority levels
+- [x] **Mängelmelder**: Report infrastructure issues with photos/location
 - [ ] **Downloads Center**: Municipal forms and documents
 - [ ] **Mängelmelder**: Report infrastructure issues with photos/location
 - [ ] **Report Tracking**: Check status of submitted reports

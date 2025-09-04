@@ -94,6 +94,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             children: [
               AukrugMap(
                 markers: markers,
+                showUserLocation: true,
                 onMarkerTap: (marker) {
                   // Find event for this marker
                   final markerIndex = markers.indexOf(marker);
