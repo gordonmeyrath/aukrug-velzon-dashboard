@@ -1,0 +1,51 @@
+name: PHP CI
+
+on:
+  push:
+    paths:
+      - 'plugin/**'
+      - '.github/workflows/php_ci.yml'
+  pull_request:
+    paths:
+      - 'plugin/**'
+      - '.github/workflows/php_ci.yml'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, ctype, iconv, curl, zip
+        coverage: xdebug
+    
+    - name: Cache Composer dependencies
+      uses: actions/cache@v3
+      with:
+        path: plugin/vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+    
+    - name: Install dependencies
+      working-directory: ./plugin
+      run: composer install --prefer-dist --no-progress --no-suggest
+    
+    - name: Run PHP CodeSniffer
+      working-directory: ./plugin
+      run: vendor/bin/phpcs --standard=PSR12 --ignore=vendor/ .
+    
+    - name: Run PHPUnit
+      working-directory: ./plugin
+      run: vendor/bin/phpunit --coverage-clover coverage.xml
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./plugin/coverage.xml
+        fail_ci_if_error: false

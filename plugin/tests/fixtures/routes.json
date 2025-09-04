@@ -1,0 +1,68 @@
+{
+  "routes": [
+    {
+      "id": 10,
+      "title": "Naturpark Rundwanderweg",
+      "content": "Ein 5km langer Rundwanderweg durch den Naturpark Aukrug mit schönen Aussichtspunkten und Rastplätzen.",
+      "excerpt": "5km Rundwanderweg durch den Naturpark",
+      "date_created": "2024-01-20T11:00:00Z",
+      "date_modified": "2024-01-20T11:00:00Z",
+      "status": "publish",
+      "location": {
+        "latitude": 54.1456,
+        "longitude": 9.8432,
+        "address": "Start: Am Naturpark 5, 24613 Aukrug"
+      },
+      "taxonomy": {
+        "audience": ["tourist"],
+        "category": ["hiking", "nature"]
+      },
+      "meta": {
+        "distance": "5.2",
+        "duration": "90",
+        "difficulty": "easy",
+        "waypoints": [
+          {"lat": 54.1456, "lng": 9.8432, "name": "Start/Parkplatz"},
+          {"lat": 54.1523, "lng": 9.8345, "name": "Aussichtspunkt Berg"},
+          {"lat": 54.1598, "lng": 9.8567, "name": "Rastplatz Wald"},
+          {"lat": 54.1456, "lng": 9.8432, "name": "Ziel/Parkplatz"}
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "title": "Fahrradroute Dorfkern",
+      "content": "Eine familienfreundliche 3km Fahrradroute durch das Zentrum von Aukrug.",
+      "excerpt": "3km Fahrradroute durch den Dorfkern",
+      "date_created": "2024-01-21T14:30:00Z",
+      "date_modified": "2024-01-21T14:30:00Z",
+      "status": "publish",
+      "location": {
+        "latitude": 54.1234,
+        "longitude": 9.8765,
+        "address": "Start: Dorfstraße 1, 24613 Aukrug"
+      },
+      "taxonomy": {
+        "audience": ["tourist", "resident"],
+        "category": ["cycling", "family"]
+      },
+      "meta": {
+        "distance": "3.1",
+        "duration": "45",
+        "difficulty": "easy",
+        "waypoints": [
+          {"lat": 54.1234, "lng": 9.8765, "name": "Gemeindezentrum"},
+          {"lat": 54.1345, "lng": 9.8654, "name": "Dorfteich"},
+          {"lat": 54.1432, "lng": 9.8543, "name": "Alte Mühle"},
+          {"lat": 54.1234, "lng": 9.8765, "name": "Gemeindezentrum"}
+        ]
+      }
+    }
+  ],
+  "pagination": {
+    "total": 2,
+    "total_pages": 1,
+    "current_page": 1,
+    "per_page": 20
+  }
+}

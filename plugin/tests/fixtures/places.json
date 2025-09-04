@@ -1,0 +1,67 @@
+{
+  "places": [
+    {
+      "id": 1,
+      "title": "Aukrug Gemeindezentrum",
+      "content": "Das Gemeindezentrum ist das Herz von Aukrug mit Verwaltung, Bürgerbüro und Veranstaltungsräumen.",
+      "excerpt": "Gemeindezentrum mit Verwaltung und Veranstaltungsräumen",
+      "date_created": "2024-01-15T10:00:00Z",
+      "date_modified": "2024-01-15T10:00:00Z",
+      "status": "publish",
+      "location": {
+        "latitude": 54.1234,
+        "longitude": 9.8765,
+        "address": "Dorfstraße 1, 24613 Aukrug"
+      },
+      "taxonomy": {
+        "audience": ["tourist", "resident"],
+        "category": ["public-building"]
+      },
+      "featured_image": null
+    },
+    {
+      "id": 2,
+      "title": "Wanderparkplatz Naturpark",
+      "content": "Startpunkt für verschiedene Wanderrouten durch den Naturpark Aukrug mit Informationstafeln.",
+      "excerpt": "Parkplatz und Startpunkt für Wanderungen",
+      "date_created": "2024-01-16T09:30:00Z",
+      "date_modified": "2024-01-16T09:30:00Z",
+      "status": "publish",
+      "location": {
+        "latitude": 54.1456,
+        "longitude": 9.8432,
+        "address": "Am Naturpark 5, 24613 Aukrug"
+      },
+      "taxonomy": {
+        "audience": ["tourist"],
+        "category": ["recreation", "parking"]
+      },
+      "featured_image": null
+    },
+    {
+      "id": 3,
+      "title": "Grundschule Aukrug",
+      "content": "Die örtliche Grundschule für Klassen 1-4 mit modernen Klassenzimmern und Spielplatz.",
+      "excerpt": "Grundschule für die örtlichen Kinder",
+      "date_created": "2024-01-17T08:00:00Z",
+      "date_modified": "2024-01-17T08:00:00Z",
+      "status": "publish",
+      "location": {
+        "latitude": 54.1678,
+        "longitude": 9.8123,
+        "address": "Schulstraße 12, 24613 Aukrug"
+      },
+      "taxonomy": {
+        "audience": ["resident", "schule"],
+        "category": ["education"]
+      },
+      "featured_image": null
+    }
+  ],
+  "pagination": {
+    "total": 3,
+    "total_pages": 1,
+    "current_page": 1,
+    "per_page": 20
+  }
+}

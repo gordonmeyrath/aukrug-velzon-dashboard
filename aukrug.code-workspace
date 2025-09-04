@@ -1,0 +1,46 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "Flutter App",
+      "path": "./app"
+    },
+    {
+      "name": "WordPress Plugin",
+      "path": "./plugin"
+    }
+  ],
+  "settings": {
+    "git.enabled": true,
+    "git.path": "git",
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "php.validate.executablePath": "/usr/bin/php",
+    "phpcs.enable": true,
+    "phpcs.standard": "PSR12",
+    "files.associations": {
+      "*.php": "php"
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/vendor": true,
+      "**/.dart_tool": true,
+      "**/build": true,
+      "**/.git": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "dart-code.dart-code",
+      "dart-code.flutter",
+      "bmewburn.vscode-intelephense-client",
+      "ikappas.phpcs",
+      "eamodio.gitlens",
+      "github.copilot",
+      "github.copilot-chat"
+    ]
+  }
+}
