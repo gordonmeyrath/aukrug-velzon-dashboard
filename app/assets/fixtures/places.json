@@ -1,0 +1,139 @@
+[
+    {
+        "id": 1,
+        "name": "Aukrug Zentrum",
+        "description": "Das Herz von Aukrug mit Geschäften und Restaurants.",
+        "latitude": 54.1347,
+        "longitude": 9.7685,
+        "imageUrl": null,
+        "category": "service",
+        "address": "Hauptstraße 1, 24613 Aukrug",
+        "website": "https://aukrug.de",
+        "phone": "+49 4873 123456",
+        "openingHours": {
+            "monday": "08:00-18:00",
+            "tuesday": "08:00-18:00",
+            "wednesday": "08:00-18:00",
+            "thursday": "08:00-18:00",
+            "friday": "08:00-18:00",
+            "saturday": "09:00-16:00",
+            "sunday": "Geschlossen"
+        },
+        "tags": [
+            "zentrum",
+            "einkaufen"
+        ],
+        "isFavorite": false,
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+        "id": 2,
+        "name": "Gasthaus Zur Linde",
+        "description": "Traditionelles schleswig-holsteinisches Restaurant mit regionaler Küche.",
+        "latitude": 54.1355,
+        "longitude": 9.7692,
+        "imageUrl": null,
+        "category": "restaurant",
+        "address": "Lindenstraße 12, 24613 Aukrug",
+        "website": null,
+        "phone": "+49 4873 234567",
+        "openingHours": {
+            "monday": "Geschlossen",
+            "tuesday": "17:00-22:00",
+            "wednesday": "17:00-22:00",
+            "thursday": "17:00-22:00",
+            "friday": "17:00-23:00",
+            "saturday": "12:00-23:00",
+            "sunday": "12:00-21:00"
+        },
+        "tags": [
+            "restaurant",
+            "regional",
+            "traditionell"
+        ],
+        "isFavorite": false,
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+        "id": 3,
+        "name": "Aukrug Waldgebiet",
+        "description": "Wunderschönes Waldgebiet mit Wanderwegen und Naturerlebnissen.",
+        "latitude": 54.1320,
+        "longitude": 9.7650,
+        "imageUrl": null,
+        "category": "nature",
+        "address": "Waldweg, 24613 Aukrug",
+        "website": null,
+        "phone": null,
+        "openingHours": null,
+        "tags": [
+            "natur",
+            "wandern",
+            "wald"
+        ],
+        "isFavorite": true,
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+        "id": 4,
+        "name": "Historische Kirche",
+        "description": "Mittelalterliche Kirche aus dem 13. Jahrhundert.",
+        "latitude": 54.1340,
+        "longitude": 9.7670,
+        "imageUrl": null,
+        "category": "historic",
+        "address": "Kirchstraße 5, 24613 Aukrug",
+        "website": null,
+        "phone": null,
+        "openingHours": {
+            "monday": "09:00-17:00",
+            "tuesday": "09:00-17:00",
+            "wednesday": "09:00-17:00",
+            "thursday": "09:00-17:00",
+            "friday": "09:00-17:00",
+            "saturday": "10:00-16:00",
+            "sunday": "Nach Gottesdienst"
+        },
+        "tags": [
+            "geschichte",
+            "kirche",
+            "mittelalter"
+        ],
+        "isFavorite": false,
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-01-01T00:00:00Z"
+    },
+    {
+        "id": 5,
+        "name": "Aukrug See",
+        "description": "Idyllischer See mit Bademöglichkeiten und Bootsverleih.",
+        "latitude": 54.1380,
+        "longitude": 9.7720,
+        "imageUrl": null,
+        "category": "nature",
+        "address": "Seestraße, 24613 Aukrug",
+        "website": null,
+        "phone": "+49 4873 345678",
+        "openingHours": {
+            "monday": "08:00-20:00",
+            "tuesday": "08:00-20:00",
+            "wednesday": "08:00-20:00",
+            "thursday": "08:00-20:00",
+            "friday": "08:00-20:00",
+            "saturday": "08:00-20:00",
+            "sunday": "08:00-20:00"
+        },
+        "tags": [
+            "see",
+            "baden",
+            "boote",
+            "erholung"
+        ],
+        "isFavorite": true,
+        "createdAt": "2025-01-01T00:00:00Z",
+        "updatedAt": "2025-01-01T00:00:00Z"
+    }
+]
