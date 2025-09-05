@@ -4,10 +4,10 @@ import 'package:latlong2/latlong.dart';
 
 /// Location accuracy level for different use cases
 enum LocationAccuracyLevel {
-  low,      // For general location, less battery usage
-  medium,   // For map viewing
-  high,     // For precise location selection
-  best,     // For navigation and reporting
+  low, // For general location, less battery usage
+  medium, // For map viewing
+  high, // For precise location selection
+  best, // For navigation and reporting
 }
 
 /// Location service status
@@ -31,7 +31,7 @@ class LocationService {
 
     // Check permissions
     LocationPermission permission = await Geolocator.checkPermission();
-    
+
     switch (permission) {
       case LocationPermission.denied:
         permission = await Geolocator.requestPermission();
@@ -196,16 +196,22 @@ final locationServiceProvider = Provider<LocationService>((ref) {
 });
 
 /// Provider for location service status
-final locationStatusProvider = FutureProvider<LocationServiceStatus>((ref) async {
+final locationStatusProvider = FutureProvider<LocationServiceStatus>((
+  ref,
+) async {
   final locationService = ref.read(locationServiceProvider);
   return await locationService.getLocationStatus();
 });
 
 /// Provider for current user location with configurable accuracy
-final currentLocationProvider = FutureProvider.family<LatLng?, LocationAccuracyLevel>((ref, accuracy) async {
-  final locationService = ref.read(locationServiceProvider);
-  return await locationService.getCurrentLocation(accuracy: accuracy);
-});
+final currentLocationProvider =
+    FutureProvider.family<LatLng?, LocationAccuracyLevel>((
+      ref,
+      accuracy,
+    ) async {
+      final locationService = ref.read(locationServiceProvider);
+      return await locationService.getCurrentLocation(accuracy: accuracy);
+    });
 
 /// Provider for last known location (faster alternative)
 final lastKnownLocationProvider = FutureProvider<LatLng?>((ref) async {
@@ -220,25 +226,31 @@ final locationPermissionProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Provider for real-time location stream with configurable accuracy
-final locationStreamProvider = StreamProvider.family<LatLng?, LocationAccuracyLevel>((ref, accuracy) async* {
-  final locationService = ref.read(locationServiceProvider);
+final locationStreamProvider =
+    StreamProvider.family<LatLng?, LocationAccuracyLevel>((
+      ref,
+      accuracy,
+    ) async* {
+      final locationService = ref.read(locationServiceProvider);
 
-  try {
-    await for (LatLng location in locationService.getLocationStream(accuracy: accuracy)) {
-      yield location;
-    }
-  } catch (e) {
-    yield null;
-  }
-});
+      try {
+        await for (LatLng location in locationService.getLocationStream(
+          accuracy: accuracy,
+        )) {
+          yield location;
+        }
+      } catch (e) {
+        yield null;
+      }
+    });
 
 /// Provider to check if current location is within Aukrug
 final isWithinAukrugProvider = FutureProvider<bool?>((ref) async {
   final locationService = ref.read(locationServiceProvider);
   final currentLocation = await ref.read(lastKnownLocationProvider.future);
-  
+
   if (currentLocation == null) return null;
-  
+
   return locationService.isWithinAukrug(currentLocation);
 });
 
@@ -246,8 +258,8 @@ final isWithinAukrugProvider = FutureProvider<bool?>((ref) async {
 final distanceToAukrugProvider = FutureProvider<double?>((ref) async {
   final locationService = ref.read(locationServiceProvider);
   final currentLocation = await ref.read(lastKnownLocationProvider.future);
-  
+
   if (currentLocation == null) return null;
-  
+
   return locationService.getDistanceToAukrug(currentLocation);
 });

@@ -66,6 +66,7 @@ dependencies:
   path_provider: ^2.1.1
   shared_preferences: ^2.2.2
   path: ^1.8.3
+  crypto: ^3.0.3
 
   # UI
   cupertino_icons: ^1.0.8

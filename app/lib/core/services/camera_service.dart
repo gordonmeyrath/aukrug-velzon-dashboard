@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
-import 'package:path_provider/path_provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 /// Camera service for managing photo capture and gallery selection
 class CameraService {
@@ -62,7 +63,9 @@ class CameraService {
 
       List<File> processedFiles = [];
       for (XFile photo in photos) {
-        final File? processedFile = await _processAndSaveImage(File(photo.path));
+        final File? processedFile = await _processAndSaveImage(
+          File(photo.path),
+        );
         if (processedFile != null) {
           processedFiles.add(processedFile);
         }
@@ -101,7 +104,8 @@ class CameraService {
 
       // Save to app directory
       final Directory appDir = await getApplicationDocumentsDirectory();
-      final String fileName = 'report_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final String fileName =
+          'report_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final String filePath = path.join(appDir.path, 'images', fileName);
 
       // Create directory if it doesn't exist
@@ -158,7 +162,7 @@ class CameraService {
 
       final Uint8List bytes = await file.readAsBytes();
       final img.Image? image = img.decodeImage(bytes);
-      
+
       return image != null;
     } catch (e) {
       return false;
@@ -244,9 +248,7 @@ class _PhotoSourceButton extends StatelessWidget {
       label: Text(label),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }

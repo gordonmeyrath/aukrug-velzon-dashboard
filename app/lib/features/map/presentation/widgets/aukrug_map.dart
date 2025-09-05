@@ -216,7 +216,9 @@ class _AukrugMapState extends ConsumerState<AukrugMap> {
                     icon: Icons.my_location,
                     onTap: () async {
                       final location = await ref.read(
-                        currentLocationProvider(LocationAccuracyLevel.high).future,
+                        currentLocationProvider(
+                          LocationAccuracyLevel.high,
+                        ).future,
                       );
                       if (location != null) {
                         _mapController.move(location, 16.0);

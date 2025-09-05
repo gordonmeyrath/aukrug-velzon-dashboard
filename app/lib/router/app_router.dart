@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../features/auth/presentation/consent_page.dart';
+import '../features/auth/presentation/welcome_page.dart';
+import '../features/auth/presentation/email_auth_page.dart';
+import '../features/auth/presentation/privacy_settings_page.dart';
 import '../features/events/presentation/events_list_page.dart';
 import '../features/map/presentation/pages/reports_map_page.dart';
 import '../features/notices/presentation/notices_list_page.dart';
@@ -18,7 +21,7 @@ part 'app_router.g.dart';
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
   return GoRouter(
-    initialLocation: '/splash',
+    initialLocation: '/welcome',
     routes: [
       // Splash / Audience Picker
       GoRoute(
@@ -26,10 +29,28 @@ GoRouter appRouter(AppRouterRef ref) {
         builder: (context, state) => const AudiencePickerPage(),
       ),
 
+      // Welcome Page (DSGVO-konform)
+      GoRoute(
+        path: '/welcome',
+        builder: (context, state) => const WelcomePage(),
+      ),
+
+      // Authentication Routes
+      GoRoute(
+        path: '/auth/email',
+        builder: (context, state) => const EmailAuthPage(),
+      ),
+
       // Consent Page
       GoRoute(
         path: '/consent',
         builder: (context, state) => const ConsentPage(),
+      ),
+
+      // Privacy Settings
+      GoRoute(
+        path: '/privacy-settings',
+        builder: (context, state) => const PrivacySettingsPage(),
       ),
 
       // Tourist Shell

@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/app_error.dart';
 import '../domain/document.dart';
 
-part 'documents_repository.g.dart';
+part 'documents_repository_v2.g.dart';
 
 @riverpod
-DocumentsRepository documentsRepository(DocumentsRepositoryRef ref) {
+DocumentsRepository documentsRepository(Ref ref) {
   return DocumentsRepository();
 }
 

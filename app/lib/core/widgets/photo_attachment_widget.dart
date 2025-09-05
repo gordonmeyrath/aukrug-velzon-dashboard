@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -31,21 +32,21 @@ class PhotoAttachmentWidget extends ConsumerWidget {
           children: [
             Text(
               'Fotos',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
             if (photos.isNotEmpty)
               Text(
                 '${photos.length}/$maxPhotos',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
           ],
         ),
         const SizedBox(height: 8),
-        
+
         // Photo Grid
         if (photos.isNotEmpty) ...[
           _PhotoGrid(
@@ -57,9 +58,7 @@ class PhotoAttachmentWidget extends ConsumerWidget {
 
         // Add Photo Button
         if (isEditable && photos.length < maxPhotos)
-          _AddPhotoButton(
-            onPressed: () => _showPhotoOptions(context, ref),
-          ),
+          _AddPhotoButton(onPressed: () => _showPhotoOptions(context, ref)),
       ],
     );
   }
@@ -84,10 +83,7 @@ class _PhotoGrid extends StatelessWidget {
   final List<File> photos;
   final Function(int)? onRemovePhoto;
 
-  const _PhotoGrid({
-    required this.photos,
-    this.onRemovePhoto,
-  });
+  const _PhotoGrid({required this.photos, this.onRemovePhoto});
 
   @override
   Widget build(BuildContext context) {
@@ -111,13 +107,15 @@ class _PhotoGrid extends StatelessWidget {
     );
   }
 
-  void _showPhotoPreview(BuildContext context, List<File> photos, int initialIndex) {
+  void _showPhotoPreview(
+    BuildContext context,
+    List<File> photos,
+    int initialIndex,
+  ) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => PhotoPreviewPage(
-          photos: photos,
-          initialIndex: initialIndex,
-        ),
+        builder: (context) =>
+            PhotoPreviewPage(photos: photos, initialIndex: initialIndex),
       ),
     );
   }
@@ -129,11 +127,7 @@ class _PhotoItem extends StatelessWidget {
   final VoidCallback? onRemove;
   final VoidCallback? onTap;
 
-  const _PhotoItem({
-    required this.photo,
-    this.onRemove,
-    this.onTap,
-  });
+  const _PhotoItem({required this.photo, this.onRemove, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -206,9 +200,7 @@ class _PhotoItem extends StatelessWidget {
 class _AddPhotoButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const _AddPhotoButton({
-    required this.onPressed,
-  });
+  const _AddPhotoButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -235,8 +227,8 @@ class _AddPhotoButton extends StatelessWidget {
             Text(
               'Foto hinzufügen',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ],
         ),
@@ -270,7 +262,7 @@ class _PhotoOptionsSheet extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            
+
             // Camera option
             _OptionButton(
               icon: Icons.camera_alt,
@@ -278,7 +270,7 @@ class _PhotoOptionsSheet extends StatelessWidget {
               onPressed: () => _handleCameraSelection(context),
             ),
             const SizedBox(height: 8),
-            
+
             // Gallery option
             _OptionButton(
               icon: Icons.photo_library,
@@ -286,7 +278,7 @@ class _PhotoOptionsSheet extends StatelessWidget {
               onPressed: () => _handleGallerySelection(context),
             ),
             const SizedBox(height: 16),
-            
+
             // Cancel
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -335,9 +327,7 @@ class _OptionButton extends StatelessWidget {
       label: Text(label),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
     );
   }

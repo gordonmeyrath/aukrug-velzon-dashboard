@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
@@ -65,7 +66,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   bool _isLoadingLocation = false;
 
   // Photo attachments
-  List<File> _selectedPhotos = [];
+  final List<File> _selectedPhotos = [];
 
   @override
   void dispose() {
@@ -276,7 +277,9 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                     const SizedBox(height: 16),
 
                     OutlinedButton.icon(
-                      onPressed: _isLoadingLocation ? null : _getCurrentLocation,
+                      onPressed: _isLoadingLocation
+                          ? null
+                          : _getCurrentLocation,
                       icon: _isLoadingLocation
                           ? const SizedBox(
                               width: 16,
@@ -522,13 +525,16 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
         String message;
         switch (status) {
           case LocationServiceStatus.disabled:
-            message = 'GPS ist deaktiviert. Bitte aktivieren Sie GPS in den Einstellungen.';
+            message =
+                'GPS ist deaktiviert. Bitte aktivieren Sie GPS in den Einstellungen.';
             break;
           case LocationServiceStatus.permissionDenied:
-            message = 'GPS-Berechtigung verweigert. Bitte erteilen Sie die Berechtigung.';
+            message =
+                'GPS-Berechtigung verweigert. Bitte erteilen Sie die Berechtigung.';
             break;
           case LocationServiceStatus.permissionDeniedForever:
-            message = 'GPS-Berechtigung dauerhaft verweigert. Bitte aktivieren Sie sie in den App-Einstellungen.';
+            message =
+                'GPS-Berechtigung dauerhaft verweigert. Bitte aktivieren Sie sie in den App-Einstellungen.';
             break;
           default:
             message = 'GPS ist nicht verfügbar.';
@@ -551,7 +557,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
         if (locationService.isWithinAukrug(location)) {
           setState(() {
             _selectedLocation = location;
-            _locationController.text = 
+            _locationController.text =
                 'GPS-Standort: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
           });
 
@@ -577,7 +583,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                   onPressed: () {
                     setState(() {
                       _selectedLocation = location;
-                      _locationController.text = 
+                      _locationController.text =
                           'GPS-Standort (außerhalb): ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
                     });
                   },
@@ -647,11 +653,9 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
         _selectedPhotos.removeAt(index);
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Foto entfernt'),
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Foto entfernt')));
     }
   }
 
