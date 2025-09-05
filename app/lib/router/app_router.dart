@@ -4,6 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../features/auth/presentation/consent_page.dart';
 import '../features/events/presentation/events_list_page.dart';
+import '../features/map/presentation/pages/reports_map_page.dart';
 import '../features/notices/presentation/notices_list_page.dart';
 import '../features/places/presentation/places_list_page.dart';
 import '../features/reports/presentation/report_issue_page.dart';
@@ -77,6 +78,10 @@ GoRouter appRouter(AppRouterRef ref) {
           GoRoute(
             path: '/resident/reports',
             builder: (context, state) => const ReportsListPage(),
+          ),
+          GoRoute(
+            path: '/resident/reports/map',
+            builder: (context, state) => const ReportsMapPage(),
           ),
           GoRoute(
             path: '/resident/report',

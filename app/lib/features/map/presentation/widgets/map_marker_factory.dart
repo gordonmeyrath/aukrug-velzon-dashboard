@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 
 import '../../../events/domain/event.dart';
 import '../../../places/domain/place.dart';
+import '../../../reports/domain/report.dart';
 
 /// Factory for creating map markers for different types of content
 class MapMarkerFactory {
@@ -42,6 +43,21 @@ class MapMarkerFactory {
       height: isSelected ? _selectedMarkerSize : _markerSize,
       alignment: Alignment.center,
       child: _EventMarker(event: event, isSelected: isSelected, onTap: onTap),
+    );
+  }
+
+  /// Create a marker for a report
+  static Marker createReportMarker(
+    Report report, {
+    bool isSelected = false,
+    VoidCallback? onTap,
+  }) {
+    return Marker(
+      point: LatLng(report.location.latitude, report.location.longitude),
+      width: isSelected ? _selectedMarkerSize : _markerSize,
+      height: isSelected ? _selectedMarkerSize : _markerSize,
+      alignment: Alignment.center,
+      child: _ReportMarker(report: report, isSelected: isSelected, onTap: onTap),
     );
   }
 
@@ -228,6 +244,91 @@ class _EventMarker extends StatelessWidget {
         return Icons.business;
       default:
         return Icons.event;
+    }
+  }
+}
+
+/// Marker widget for reports
+class _ReportMarker extends StatelessWidget {
+  const _ReportMarker({
+    required this.report,
+    required this.isSelected,
+    this.onTap,
+  });
+
+  final Report report;
+  final bool isSelected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: _getReportStatusColor(report.status),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected ? colorScheme.primary : Colors.white,
+            width: isSelected ? 3 : 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Icon(
+          _getReportCategoryIcon(report.category),
+          color: Colors.white,
+          size: isSelected ? 24 : 20,
+        ),
+      ),
+    );
+  }
+
+  Color _getReportStatusColor(ReportStatus status) {
+    switch (status) {
+      case ReportStatus.submitted:
+      case ReportStatus.received:
+        return Colors.blue;
+      case ReportStatus.inProgress:
+        return Colors.orange;
+      case ReportStatus.resolved:
+      case ReportStatus.closed:
+        return Colors.green;
+      case ReportStatus.rejected:
+        return Colors.red;
+    }
+  }
+
+  IconData _getReportCategoryIcon(ReportCategory category) {
+    switch (category) {
+      case ReportCategory.roadsTraffic:
+        return Icons.directions_car;
+      case ReportCategory.publicLighting:
+        return Icons.lightbulb;
+      case ReportCategory.wasteManagement:
+        return Icons.delete;
+      case ReportCategory.parksGreenSpaces:
+        return Icons.park;
+      case ReportCategory.waterDrainage:
+        return Icons.water_drop;
+      case ReportCategory.publicFacilities:
+        return Icons.domain;
+      case ReportCategory.vandalism:
+        return Icons.report_problem;
+      case ReportCategory.environmental:
+        return Icons.eco;
+      case ReportCategory.accessibility:
+        return Icons.accessible;
+      case ReportCategory.other:
+        return Icons.help_outline;
     }
   }
 }

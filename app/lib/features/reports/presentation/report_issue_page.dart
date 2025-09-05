@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../localization/app_localizations.dart';
+import '../../map/presentation/widgets/aukrug_map.dart';
+import '../../map/presentation/widgets/map_marker_factory.dart';
 import '../domain/report.dart';
 import 'reports_provider.dart';
 
@@ -52,6 +55,10 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   ReportCategory _selectedCategory = ReportCategory.roadsTraffic;
   ReportPriority _selectedPriority = ReportPriority.medium;
   bool _isSubmitting = false;
+  
+  // Location selection
+  LatLng? _selectedLocation;
+  bool _showLocationMap = false;
 
   @override
   void dispose() {
@@ -267,6 +274,49 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                       icon: const Icon(Icons.my_location),
                       label: const Text('Aktuellen Standort verwenden'),
                     ),
+                    
+                    const SizedBox(height: 8),
+                    
+                    OutlinedButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _showLocationMap = !_showLocationMap;
+                        });
+                      },
+                      icon: Icon(_showLocationMap ? Icons.keyboard_arrow_up : Icons.map),
+                      label: Text(_showLocationMap ? 'Karte ausblenden' : 'Auf Karte auswählen'),
+                    ),
+                    
+                    // Map for location selection
+                    if (_showLocationMap) ...[
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: 200,
+                        child: AukrugMap(
+                          markers: _selectedLocation != null
+                              ? [
+                                  MapMarkerFactory.createLocationMarker(
+                                    _selectedLocation!,
+                                    color: Colors.red,
+                                    icon: Icons.location_on,
+                                  ),
+                                ]
+                              : [],
+                          onMapTap: (latLng) {
+                            setState(() {
+                              _selectedLocation = latLng;
+                              _locationController.text = 'Ausgewählter Standort: ${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Tippen Sie auf die Karte, um einen Standort auszuwählen',
+                        style: Theme.of(context).textTheme.bodySmall,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -419,8 +469,8 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
         priority: _selectedPriority,
         status: ReportStatus.submitted,
         location: ReportLocation(
-          latitude: 54.3233, // Default Aukrug coordinates
-          longitude: 9.7500,
+          latitude: _selectedLocation?.latitude ?? 54.3233, // Default Aukrug coordinates
+          longitude: _selectedLocation?.longitude ?? 9.7500,
           address: _locationController.text.trim(),
         ),
         contactName: _contactNameController.text.trim().isNotEmpty 

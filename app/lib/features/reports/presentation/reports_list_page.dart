@@ -59,6 +59,12 @@ class _ReportsListPageState extends ConsumerState<ReportsListPage> {
         title: const Text('Meldungen'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.map),
+            onPressed: () {
+              Navigator.pushNamed(context, '/resident/reports/map');
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
               Navigator.pushNamed(context, '/resident/report');
