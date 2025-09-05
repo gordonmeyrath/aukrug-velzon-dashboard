@@ -23,14 +23,12 @@ class CategoryFilterChip extends StatelessWidget {
           : Icon(_getCategoryIcon(category), size: 16),
       selected: isSelected,
       onSelected: onSelected,
-      backgroundColor: isSelected 
+      backgroundColor: isSelected
           ? _getCategoryColor(category).withOpacity(0.1)
           : null,
       selectedColor: _getCategoryColor(category).withOpacity(0.2),
       checkmarkColor: _getCategoryColor(category),
-      side: isSelected
-          ? BorderSide(color: _getCategoryColor(category))
-          : null,
+      side: isSelected ? BorderSide(color: _getCategoryColor(category)) : null,
     );
   }
 

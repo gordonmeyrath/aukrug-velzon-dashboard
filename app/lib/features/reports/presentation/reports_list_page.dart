@@ -102,7 +102,7 @@ class _ReportsListPageState extends ConsumerState<ReportsListPage> {
                     },
                   ),
                   const SizedBox(height: 16),
-                  
+
                   // Filter Row
                   Row(
                     children: [
@@ -179,7 +179,7 @@ class _ReportsListPageState extends ConsumerState<ReportsListPage> {
               ),
             ),
           ),
-          
+
           // Reports List
           Expanded(
             child: reportsAsync.when(
@@ -224,9 +224,7 @@ class _ReportsListPageState extends ConsumerState<ReportsListPage> {
                   },
                 );
               },
-              loading: () => const Center(
-                child: CircularProgressIndicator(),
-              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -312,11 +310,7 @@ class ReportCard extends StatelessWidget {
   final Report report;
   final VoidCallback? onTap;
 
-  const ReportCard({
-    super.key,
-    required this.report,
-    this.onTap,
-  });
+  const ReportCard({super.key, required this.report, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -422,7 +416,7 @@ class ReportCard extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Heute';
     } else if (difference.inDays == 1) {
@@ -508,7 +502,7 @@ class ReportDetailsSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          
+
           // Content
           Expanded(
             child: ListView(
@@ -534,9 +528,9 @@ class ReportDetailsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 _StatusChip(status: report.status),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Description
                 Text(
                   'Beschreibung',
@@ -547,9 +541,9 @@ class ReportDetailsSheet extends StatelessWidget {
                   report.description,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Location
                 Text(
                   'Standort',
@@ -568,9 +562,9 @@ class ReportDetailsSheet extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Details
                 Card(
                   child: Padding(
@@ -585,7 +579,10 @@ class ReportDetailsSheet extends StatelessWidget {
                         _DetailRow('Status', report.status.displayName),
                         if (report.submittedAt != null) ...[
                           const SizedBox(height: 8),
-                          _DetailRow('Eingereicht', _formatDateTime(report.submittedAt!)),
+                          _DetailRow(
+                            'Eingereicht',
+                            _formatDateTime(report.submittedAt!),
+                          ),
                         ],
                         if (report.referenceNumber != null) ...[
                           const SizedBox(height: 8),
@@ -595,7 +592,7 @@ class ReportDetailsSheet extends StatelessWidget {
                     ),
                   ),
                 ),
-                
+
                 // Municipal Response
                 if (report.municipalityResponse != null) ...[
                   const SizedBox(height: 24),
@@ -626,7 +623,7 @@ class ReportDetailsSheet extends StatelessWidget {
                     ),
                   ),
                 ],
-                
+
                 const SizedBox(height: 32),
               ],
             ),
@@ -682,16 +679,13 @@ class _DetailRow extends StatelessWidget {
           width: 120,
           child: Text(
             label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
           ),
         ),
         Expanded(
-          child: Text(
-            value,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          child: Text(value, style: Theme.of(context).textTheme.bodyMedium),
         ),
       ],
     );

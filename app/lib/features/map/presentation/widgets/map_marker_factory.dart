@@ -57,7 +57,11 @@ class MapMarkerFactory {
       width: isSelected ? _selectedMarkerSize : _markerSize,
       height: isSelected ? _selectedMarkerSize : _markerSize,
       alignment: Alignment.center,
-      child: _ReportMarker(report: report, isSelected: isSelected, onTap: onTap),
+      child: _ReportMarker(
+        report: report,
+        isSelected: isSelected,
+        onTap: onTap,
+      ),
     );
   }
 

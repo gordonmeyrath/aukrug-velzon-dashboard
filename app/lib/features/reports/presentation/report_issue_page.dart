@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../core/services/location_service.dart';
+import '../../../core/widgets/photo_attachment_widget.dart';
 import '../../../localization/app_localizations.dart';
 import '../../map/presentation/widgets/aukrug_map.dart';
 import '../../map/presentation/widgets/map_marker_factory.dart';
@@ -51,14 +54,18 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
   final _contactNameController = TextEditingController();
   final _contactEmailController = TextEditingController();
   final _contactPhoneController = TextEditingController();
-  
+
   ReportCategory _selectedCategory = ReportCategory.roadsTraffic;
   ReportPriority _selectedPriority = ReportPriority.medium;
   bool _isSubmitting = false;
-  
+
   // Location selection
   LatLng? _selectedLocation;
   bool _showLocationMap = false;
+  bool _isLoadingLocation = false;
+
+  // Photo attachments
+  List<File> _selectedPhotos = [];
 
   @override
   void dispose() {
@@ -116,9 +123,13 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                               Icon(
                                 category.icon,
                                 size: 18,
-                                color: isSelected 
-                                    ? Theme.of(context).colorScheme.onSecondaryContainer
-                                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                                color: isSelected
+                                    ? Theme.of(
+                                        context,
+                                      ).colorScheme.onSecondaryContainer
+                                    : Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
                               ),
                               const SizedBox(width: 8),
                               Text(category.displayName),
@@ -138,7 +149,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
 
             Card(
@@ -160,10 +171,12 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                         return FilterChip(
                           selected: isSelected,
                           label: Text(priority.displayName),
-                          backgroundColor: isSelected 
+                          backgroundColor: isSelected
                               ? _getPriorityColor(priority).withOpacity(0.3)
                               : null,
-                          selectedColor: _getPriorityColor(priority).withOpacity(0.5),
+                          selectedColor: _getPriorityColor(
+                            priority,
+                          ).withOpacity(0.5),
                           onSelected: (selected) {
                             if (selected) {
                               setState(() {
@@ -192,7 +205,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     TextFormField(
                       controller: _titleController,
                       decoration: const InputDecoration(
@@ -207,9 +220,9 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                         return null;
                       },
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     TextFormField(
                       controller: _descriptionController,
                       decoration: const InputDecoration(
@@ -243,7 +256,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     TextFormField(
                       controller: _locationController,
                       decoration: const InputDecoration(
@@ -259,34 +272,43 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                         return null;
                       },
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     OutlinedButton.icon(
-                      onPressed: () {
-                        // TODO: Implement GPS location
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('GPS-Standort wird in einer späteren Version implementiert'),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.my_location),
-                      label: const Text('Aktuellen Standort verwenden'),
+                      onPressed: _isLoadingLocation ? null : _getCurrentLocation,
+                      icon: _isLoadingLocation
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.my_location),
+                      label: Text(
+                        _isLoadingLocation
+                            ? 'GPS wird ermittelt...'
+                            : 'Aktuellen Standort verwenden',
+                      ),
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     OutlinedButton.icon(
                       onPressed: () {
                         setState(() {
                           _showLocationMap = !_showLocationMap;
                         });
                       },
-                      icon: Icon(_showLocationMap ? Icons.keyboard_arrow_up : Icons.map),
-                      label: Text(_showLocationMap ? 'Karte ausblenden' : 'Auf Karte auswählen'),
+                      icon: Icon(
+                        _showLocationMap ? Icons.keyboard_arrow_up : Icons.map,
+                      ),
+                      label: Text(
+                        _showLocationMap
+                            ? 'Karte ausblenden'
+                            : 'Auf Karte auswählen',
+                      ),
                     ),
-                    
+
                     // Map for location selection
                     if (_showLocationMap) ...[
                       const SizedBox(height: 16),
@@ -305,7 +327,8 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                           onMapTap: (latLng) {
                             setState(() {
                               _selectedLocation = latLng;
-                              _locationController.text = 'Ausgewählter Standort: ${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
+                              _locationController.text =
+                                  'Ausgewählter Standort: ${latLng.latitude.toStringAsFixed(4)}, ${latLng.longitude.toStringAsFixed(4)}';
                             });
                           },
                         ),
@@ -340,7 +363,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     TextFormField(
                       controller: _contactNameController,
                       decoration: const InputDecoration(
@@ -349,9 +372,9 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                         prefixIcon: Icon(Icons.person),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     TextFormField(
                       controller: _contactEmailController,
                       decoration: const InputDecoration(
@@ -361,9 +384,9 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     TextFormField(
                       controller: _contactPhoneController,
                       decoration: const InputDecoration(
@@ -383,43 +406,11 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Fotos hinzufügen (optional)',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    const SizedBox(height: 16),
-                    
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        // TODO: Implement camera/gallery
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Foto-Upload wird in einer späteren Version implementiert'),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.camera_alt),
-                      label: const Text('Foto aufnehmen'),
-                    ),
-                    
-                    const SizedBox(height: 8),
-                    
-                    OutlinedButton.icon(
-                      onPressed: () {
-                        // TODO: Implement gallery picker
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Galerie-Auswahl wird in einer späteren Version implementiert'),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.photo_library),
-                      label: const Text('Aus Galerie wählen'),
-                    ),
-                  ],
+                child: PhotoAttachmentWidget(
+                  photos: _selectedPhotos,
+                  onAddPhoto: _addPhoto,
+                  onRemovePhoto: _removePhoto,
+                  maxPhotos: 5,
                 ),
               ),
             ),
@@ -469,22 +460,26 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
         priority: _selectedPriority,
         status: ReportStatus.submitted,
         location: ReportLocation(
-          latitude: _selectedLocation?.latitude ?? 54.3233, // Default Aukrug coordinates
+          latitude:
+              _selectedLocation?.latitude ??
+              54.3233, // Default Aukrug coordinates
           longitude: _selectedLocation?.longitude ?? 9.7500,
           address: _locationController.text.trim(),
         ),
-        contactName: _contactNameController.text.trim().isNotEmpty 
-            ? _contactNameController.text.trim() 
+        imageUrls: _selectedPhotos.map((file) => file.path).toList(),
+        contactName: _contactNameController.text.trim().isNotEmpty
+            ? _contactNameController.text.trim()
             : null,
-        contactEmail: _contactEmailController.text.trim().isNotEmpty 
-            ? _contactEmailController.text.trim() 
+        contactEmail: _contactEmailController.text.trim().isNotEmpty
+            ? _contactEmailController.text.trim()
             : null,
-        contactPhone: _contactPhoneController.text.trim().isNotEmpty 
-            ? _contactPhoneController.text.trim() 
+        contactPhone: _contactPhoneController.text.trim().isNotEmpty
+            ? _contactPhoneController.text.trim()
             : null,
-        isAnonymous: _contactNameController.text.trim().isEmpty &&
-                    _contactEmailController.text.trim().isEmpty &&
-                    _contactPhoneController.text.trim().isEmpty,
+        isAnonymous:
+            _contactNameController.text.trim().isEmpty &&
+            _contactEmailController.text.trim().isEmpty &&
+            _contactPhoneController.text.trim().isEmpty,
         submittedAt: DateTime.now(),
       );
 
@@ -513,15 +508,158 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
     }
   }
 
+  /// Get current GPS location
+  Future<void> _getCurrentLocation() async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+
+    try {
+      final locationService = ref.read(locationServiceProvider);
+      final status = await locationService.getLocationStatus();
+
+      if (status != LocationServiceStatus.available) {
+        String message;
+        switch (status) {
+          case LocationServiceStatus.disabled:
+            message = 'GPS ist deaktiviert. Bitte aktivieren Sie GPS in den Einstellungen.';
+            break;
+          case LocationServiceStatus.permissionDenied:
+            message = 'GPS-Berechtigung verweigert. Bitte erteilen Sie die Berechtigung.';
+            break;
+          case LocationServiceStatus.permissionDeniedForever:
+            message = 'GPS-Berechtigung dauerhaft verweigert. Bitte aktivieren Sie sie in den App-Einstellungen.';
+            break;
+          default:
+            message = 'GPS ist nicht verfügbar.';
+        }
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message), backgroundColor: Colors.orange),
+          );
+        }
+        return;
+      }
+
+      final location = await locationService.getCurrentLocation(
+        accuracy: LocationAccuracyLevel.high,
+        timeLimit: const Duration(seconds: 10),
+      );
+
+      if (location != null) {
+        if (locationService.isWithinAukrug(location)) {
+          setState(() {
+            _selectedLocation = location;
+            _locationController.text = 
+                'GPS-Standort: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
+          });
+
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('GPS-Standort erfolgreich ermittelt'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        } else {
+          final distance = locationService.getDistanceToAukrug(location);
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Sie befinden sich außerhalb von Aukrug (${(distance! / 1000).toStringAsFixed(1)} km entfernt). Möchten Sie trotzdem diesen Standort verwenden?',
+                ),
+                backgroundColor: Colors.orange,
+                action: SnackBarAction(
+                  label: 'Ja',
+                  onPressed: () {
+                    setState(() {
+                      _selectedLocation = location;
+                      _locationController.text = 
+                          'GPS-Standort (außerhalb): ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}';
+                    });
+                  },
+                ),
+              ),
+            );
+          }
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('GPS-Standort konnte nicht ermittelt werden'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Fehler beim GPS-Zugriff: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoadingLocation = false;
+        });
+      }
+    }
+  }
+
+  /// Add photo from camera or gallery
+  Future<void> _addPhoto(File photoFile) async {
+    if (_selectedPhotos.length >= 5) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Maximal 5 Fotos erlaubt'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _selectedPhotos.add(photoFile);
+    });
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Foto hinzugefügt'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    }
+  }
+
+  /// Remove photo at index
+  void _removePhoto(int index) {
+    if (index < _selectedPhotos.length) {
+      setState(() {
+        _selectedPhotos.removeAt(index);
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Foto entfernt'),
+        ),
+      );
+    }
+  }
+
   void _showSuccessDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        icon: const Icon(
-          Icons.check_circle,
-          color: Colors.green,
-          size: 48,
-        ),
+        icon: const Icon(Icons.check_circle, color: Colors.green, size: 48),
         title: const Text('Meldung eingegangen'),
         content: const Column(
           mainAxisSize: MainAxisSize.min,
@@ -570,21 +708,22 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8),
-              Text('• Schäden an Straßen und Gehwegen\n'
-                   '• Defekte Straßenbeleuchtung\n'
-                   '• Probleme mit Grünflächen\n'
-                   '• Sicherheitsmängel\n'
-                   '• Verschmutzungen im öffentlichen Raum'),
-              SizedBox(height: 16),
               Text(
-                'Notfälle',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                '• Schäden an Straßen und Gehwegen\n'
+                '• Defekte Straßenbeleuchtung\n'
+                '• Probleme mit Grünflächen\n'
+                '• Sicherheitsmängel\n'
+                '• Verschmutzungen im öffentlichen Raum',
               ),
+              SizedBox(height: 16),
+              Text('Notfälle', style: TextStyle(fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
-              Text('Bei akuten Gefahren wenden Sie sich bitte direkt an:\n'
-                   '• Feuerwehr/Rettung: 112\n'
-                   '• Polizei: 110\n'
-                   '• Gemeindeverwaltung: 04391 599-0'),
+              Text(
+                'Bei akuten Gefahren wenden Sie sich bitte direkt an:\n'
+                '• Feuerwehr/Rettung: 112\n'
+                '• Polizei: 110\n'
+                '• Gemeindeverwaltung: 04391 599-0',
+              ),
             ],
           ),
         ),

@@ -7,9 +7,11 @@
 ## 🎯 Implementierte Features
 
 ### Reports/Mängelmelder System
+
 Das vollständige Mängelmelder-System wurde implementiert und ermöglicht es Bürgern, Probleme und Mängel im öffentlichen Raum der Gemeinde Aukrug zu melden.
 
 #### Domain Layer
+
 - **Report Domain Model**: Vollständiges Freezed-Model mit JSON-Serialization
 - **ReportLocation**: Geo-Lokalisierung für präzise Standortangaben
 - **ReportCategory**: 10 Kategorien für verschiedene Problembereiche
@@ -27,6 +29,7 @@ Das vollständige Mängelmelder-System wurde implementiert und ermöglicht es B�
 - **ReportStatus**: 6 Status-Zustände (eingereicht, erhalten, in Bearbeitung, gelöst, abgeschlossen, abgelehnt)
 
 #### Data Layer
+
 - **ReportsRepository**: Repository-Pattern mit offline-first Ansatz
 - **Fixture Data**: 10 realistische Demo-Reports in `assets/fixtures/reports.json`
 - **CRUD Operations**: Vollständige Create, Read, Update, Delete Funktionen
@@ -34,6 +37,7 @@ Das vollständige Mängelmelder-System wurde implementiert und ermöglicht es B�
 - **Geolocation Support**: Distanzberechnung und standortbasierte Suche
 
 #### Presentation Layer
+
 - **ReportIssuePage**: Vollständiges Meldungsformular
   - Kategorieauswahl mit Icons und Farbkodierung
   - Prioritätsstufen mit visueller Unterscheidung
@@ -55,11 +59,13 @@ Das vollständige Mängelmelder-System wurde implementiert und ermöglicht es B�
   - `allReports`, `reportsByCategory`, `reportsByStatus`: Verschiedene Listen-Provider
 
 #### Navigation & Integration
+
 - **Router Integration**: GoRouter Routen für `/resident/reports` und `/resident/report`
 - **Bottom Navigation**: Mängel-Tab im ResidentShell mit Icon
 - **Deep Linking**: Direkter Zugang zu Meldung erstellen oder Liste anzeigen
 
 #### UI/UX Verbesserungen
+
 - **Material 3 Design**: Moderne Cards, Chips und Filter-Buttons
 - **Accessibility**: Icons, Farbkodierung und klare Labels
 - **Responsive Design**: Funktioniert auf verschiedenen Bildschirmgrößen
@@ -69,6 +75,7 @@ Das vollständige Mängelmelder-System wurde implementiert und ermöglicht es B�
 ## 📊 Demo-Daten
 
 10 vorgefertigte Reports zum Testen der Funktionalität:
+
 1. Schlagloch auf Hauptstraße (Straßen & Verkehr, hoch)
 2. Defekte Straßenlaterne (Öffentliche Beleuchtung, mittel)
 3. Graffiti am Spielplatz (Vandalismus, niedrig)
@@ -83,15 +90,19 @@ Das vollständige Mängelmelder-System wurde implementiert und ermöglicht es B�
 ## 🔧 Technische Details
 
 ### Code-Generierung
+
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
+
 Generiert 66 Outputs:
+
 - `report.freezed.dart`: Freezed-Models
 - `report.g.dart`: JSON-Serialization  
 - `reports_provider.g.dart`: Riverpod Providers
 
 ### Testing
+
 - ✅ Code-Generierung ohne Fehler
 - ✅ Flutter Compilation erfolgreich
 - ✅ Navigation zwischen Reports-Seiten funktional
@@ -102,12 +113,14 @@ Generiert 66 Outputs:
 ## 🎯 Nächste Entwicklungsschritte
 
 ### Sofort implementierbar:
+
 1. **Foto-Upload**: Camera/Gallery Integration für Beweisfotos
 2. **GPS-Lokalisierung**: Automatische Standorterfassung
 3. **Push-Notifications**: Status-Updates für eingereichte Meldungen
 4. **E-Mail Integration**: Automatische Bestätigungen und Updates
 
 ### Zukünftige Features:
+
 1. **Backend-Integration**: WordPress REST API Anbindung
 2. **Karten-Integration**: Visualisierung aller Reports auf interaktiver Karte
 3. **Verwaltungs-Dashboard**: Admin-Interface für Bearbeitung durch Gemeinde
@@ -116,6 +129,7 @@ Generiert 66 Outputs:
 ## 📋 Architektur-Konsistenz
 
 Das Reports-System folgt der etablierten Clean Architecture:
+
 - **Domain**: Models und Business Logic
 - **Data**: Repository Pattern mit Fixture-Daten
 - **Presentation**: Riverpod State Management + UI Components

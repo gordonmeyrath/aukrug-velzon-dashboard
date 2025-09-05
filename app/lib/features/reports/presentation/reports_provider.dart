@@ -45,7 +45,8 @@ class ReportsSearch extends _$ReportsSearch {
     return [];
   }
 
-  Future<void> search(String query, {
+  Future<void> search(
+    String query, {
     ReportCategory? category,
     ReportStatus? status,
   }) async {
@@ -59,22 +60,24 @@ class ReportsSearch extends _$ReportsSearch {
     try {
       final repository = ref.read(reportsRepositoryProvider);
       List<Report> results;
-      
+
       if (query.isNotEmpty) {
         results = await repository.searchReports(query);
       } else {
         results = await repository.getAllReports();
       }
-      
+
       // Apply additional filters
       if (category != null) {
-        results = results.where((report) => report.category == category).toList();
+        results = results
+            .where((report) => report.category == category)
+            .toList();
       }
-      
+
       if (status != null) {
         results = results.where((report) => report.status == status).toList();
       }
-      
+
       state = AsyncValue.data(results);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -99,10 +102,10 @@ class ReportSubmission extends _$ReportSubmission {
     try {
       final repository = ref.read(reportsRepositoryProvider);
       final submittedReport = await repository.submitReport(report);
-      
+
       // Invalidate all reports to refresh the list
       ref.invalidate(allReportsProvider);
-      
+
       state = AsyncValue.data(submittedReport);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

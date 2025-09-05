@@ -23,7 +23,9 @@ class PlacesListPage extends ConsumerWidget {
             icon: const Icon(Icons.near_me),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const NearbyPlacesPage()),
+                MaterialPageRoute(
+                  builder: (context) => const NearbyPlacesPage(),
+                ),
               );
             },
             tooltip: 'In meiner Nähe',

@@ -33,7 +33,9 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
           // Radius selector
           Container(
             padding: const EdgeInsets.all(16),
-            color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+            color: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -55,7 +57,7 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
               ],
             ),
           ),
-          
+
           // Places list
           Expanded(
             child: nearbyPlacesAsync.when(
@@ -63,9 +65,10 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
               error: (error, stackTrace) {
                 String errorMessage = 'Fehler beim Laden der Orte';
                 if (error.toString().contains('location')) {
-                  errorMessage = 'Standort nicht verfügbar. Bitte aktivieren Sie GPS und erteilen Sie die Berechtigung.';
+                  errorMessage =
+                      'Standort nicht verfügbar. Bitte aktivieren Sie GPS und erteilen Sie die Berechtigung.';
                 }
-                
+
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +86,8 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () => ref.refresh(nearbyPlacesProvider(_selectedRadius)),
+                        onPressed: () =>
+                            ref.refresh(nearbyPlacesProvider(_selectedRadius)),
                         child: const Text('Erneut versuchen'),
                       ),
                     ],
@@ -121,7 +125,9 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
                   itemCount: nearbyPlaces.length,
                   itemBuilder: (context, index) {
                     final placeWithDistance = nearbyPlaces[index];
-                    return _NearbyPlaceCard(placeWithDistance: placeWithDistance);
+                    return _NearbyPlaceCard(
+                      placeWithDistance: placeWithDistance,
+                    );
                   },
                 );
               },
@@ -135,9 +141,7 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
 
 /// Card widget for displaying a nearby place
 class _NearbyPlaceCard extends StatelessWidget {
-  const _NearbyPlaceCard({
-    required this.placeWithDistance,
-  });
+  const _NearbyPlaceCard({required this.placeWithDistance});
 
   final PlaceWithDistance placeWithDistance;
 
@@ -183,14 +187,11 @@ class _NearbyPlaceCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             if (place.category != null) ...[
               const SizedBox(height: 4),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8,
-                  vertical: 4,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: colorScheme.secondaryContainer,
                   borderRadius: BorderRadius.circular(8),
@@ -203,7 +204,7 @@ class _NearbyPlaceCard extends StatelessWidget {
                 ),
               ),
             ],
-            
+
             const SizedBox(height: 8),
             Text(
               place.description,
@@ -211,7 +212,7 @@ class _NearbyPlaceCard extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            
+
             const SizedBox(height: 8),
             Row(
               children: [
@@ -228,7 +229,7 @@ class _NearbyPlaceCard extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                
+
                 TextButton.icon(
                   onPressed: () {
                     // TODO: Open in navigation app
@@ -236,7 +237,7 @@ class _NearbyPlaceCard extends StatelessWidget {
                   icon: const Icon(Icons.directions, size: 16),
                   label: const Text('Route'),
                 ),
-                
+
                 TextButton.icon(
                   onPressed: () {
                     // TODO: Navigate to place details

@@ -6,10 +6,7 @@ import '../../domain/document.dart';
 class DocumentCard extends StatelessWidget {
   final Document document;
 
-  const DocumentCard({
-    super.key,
-    required this.document,
-  });
+  const DocumentCard({super.key, required this.document});
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +30,15 @@ class DocumentCard extends StatelessWidget {
                       children: [
                         Text(
                           document.title,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         if (document.description.isNotEmpty) ...[
                           const SizedBox(height: 4),
                           Text(
                             document.description,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(color: Colors.grey[600]),
                           ),
                         ],
                       ],
@@ -52,12 +47,19 @@ class DocumentCard extends StatelessWidget {
                   const SizedBox(width: 12),
                   // Kategorie Badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: _getCategoryColor(document.category).withOpacity(0.1),
+                      color: _getCategoryColor(
+                        document.category,
+                      ).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: _getCategoryColor(document.category).withOpacity(0.3),
+                        color: _getCategoryColor(
+                          document.category,
+                        ).withOpacity(0.3),
                       ),
                     ),
                     child: Text(
@@ -70,9 +72,9 @@ class DocumentCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // File Info und Tags
               Wrap(
                 spacing: 8,
@@ -126,46 +128,47 @@ class DocumentCard extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               // Tags
               if (document.tags?.isNotEmpty == true) ...[
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 4,
-                  children: (document.tags ?? []).take(3).map((tag) => 
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        '#$tag',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.grey[600],
+                  children: (document.tags ?? [])
+                      .take(3)
+                      .map(
+                        (tag) => Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            '#$tag',
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: Colors.grey[600]),
+                          ),
                         ),
-                      ),
-                    ),
-                  ).toList(),
+                      )
+                      .toList(),
                 ),
               ],
-              
+
               const SizedBox(height: 12),
-              
+
               // Footer mit Datum und Download Button
               Row(
                 children: [
-                  Icon(
-                    Icons.update,
-                    size: 16,
-                    color: Colors.grey[600],
-                  ),
+                  Icon(Icons.update, size: 16, color: Colors.grey[600]),
                   const SizedBox(width: 4),
                   Text(
                     'Aktualisiert: ${_formatDate(document.lastUpdated ?? DateTime.now())}',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelSmall?.copyWith(color: Colors.grey[600]),
                   ),
                   const Spacer(),
                   FilledButton.icon(
@@ -271,7 +274,9 @@ class DocumentCard extends StatelessWidget {
       if (document.requiresAuthentication) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Für dieses Dokument ist eine Anmeldung erforderlich'),
+            content: Text(
+              'Für dieses Dokument ist eine Anmeldung erforderlich',
+            ),
             backgroundColor: Colors.orange,
           ),
         );
@@ -290,7 +295,7 @@ class DocumentCard extends StatelessWidget {
           ),
         ),
       );
-      
+
       // Haptic Feedback
       HapticFeedback.lightImpact();
     } catch (e) {

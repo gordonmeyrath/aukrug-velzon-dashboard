@@ -23,38 +23,39 @@ class Document with _$Document {
     DateTime? updatedAt,
   }) = _Document;
 
-  factory Document.fromJson(Map<String, dynamic> json) => _$DocumentFromJson(json);
+  factory Document.fromJson(Map<String, dynamic> json) =>
+      _$DocumentFromJson(json);
 }
 
 /// Document categories for municipal services
 enum DocumentCategory {
   @JsonValue('applications')
   applications,
-  
+
   @JsonValue('permits')
   permits,
-  
+
   @JsonValue('taxes')
   taxes,
-  
+
   @JsonValue('social_services')
   socialServices,
-  
+
   @JsonValue('civil_registry')
   civilRegistry,
-  
+
   @JsonValue('planning')
   planning,
-  
+
   @JsonValue('announcements')
   announcements,
-  
+
   @JsonValue('regulations')
   regulations,
-  
+
   @JsonValue('emergency')
   emergency,
-  
+
   @JsonValue('other')
   other;
 

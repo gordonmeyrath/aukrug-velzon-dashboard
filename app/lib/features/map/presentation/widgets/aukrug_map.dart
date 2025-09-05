@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../../core/services/location_service.dart';
 
 /// Interactive map widget for displaying Aukrug locations
-/// 
+///
 /// Displays places, events, and other points of interest on an OpenStreetMap
 /// base layer with support for markers, user location, and zoom controls.
 class AukrugMap extends ConsumerStatefulWidget {
@@ -23,28 +23,30 @@ class AukrugMap extends ConsumerStatefulWidget {
 
   /// Initial center position of the map (defaults to Aukrug center)
   final LatLng? center;
-  
+
   /// Initial zoom level
   final double zoom;
-  
+
   /// List of markers to display on the map
   final List<Marker> markers;
-  
+
   /// Whether to show user's current location
   final bool showUserLocation;
-  
+
   /// Callback when map is tapped
   final void Function(LatLng)? onMapTap;
-  
+
   /// Callback when a marker is tapped
   final void Function(Marker)? onMarkerTap;
-  
+
   /// Fixed height for the map (if null, expands to parent)
   final double? height;
 
   @override
   ConsumerState<AukrugMap> createState() => _AukrugMapState();
-}class _AukrugMapState extends ConsumerState<AukrugMap> {
+}
+
+class _AukrugMapState extends ConsumerState<AukrugMap> {
   late final MapController _mapController;
 
   // Aukrug center coordinates (approximate)
@@ -66,10 +68,10 @@ class AukrugMap extends ConsumerStatefulWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     // Watch user location if enabled
-    final userLocationAsync = widget.showUserLocation 
-        ? ref.watch(currentLocationProvider)
+    final userLocationAsync = widget.showUserLocation
+        ? ref.watch(currentLocationProvider(LocationAccuracyLevel.medium))
         : const AsyncValue.data(null);
 
     Widget mapWidget = FlutterMap(
@@ -117,7 +119,7 @@ class AukrugMap extends ConsumerStatefulWidget {
               );
             }).toList(),
           ),
-        
+
         // User location marker
         if (widget.showUserLocation)
           userLocationAsync.when(
@@ -125,7 +127,7 @@ class AukrugMap extends ConsumerStatefulWidget {
             error: (_, __) => const SizedBox.shrink(),
             data: (userLocation) {
               if (userLocation == null) return const SizedBox.shrink();
-              
+
               return MarkerLayer(
                 markers: [
                   Marker(
@@ -206,14 +208,16 @@ class AukrugMap extends ConsumerStatefulWidget {
                   backgroundColor: colorScheme.surface,
                   foregroundColor: colorScheme.onSurface,
                 ),
-                
+
                 // My location button (only if location is enabled)
                 if (widget.showUserLocation) ...[
                   const SizedBox(height: 8),
                   _MapControlButton(
                     icon: Icons.my_location,
                     onTap: () async {
-                      final location = await ref.read(currentLocationProvider.future);
+                      final location = await ref.read(
+                        currentLocationProvider(LocationAccuracyLevel.high).future,
+                      );
                       if (location != null) {
                         _mapController.move(location, 16.0);
                       }

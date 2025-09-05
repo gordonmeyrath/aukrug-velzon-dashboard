@@ -39,7 +39,7 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
           if (_filterCategory != null || _filterStatus != null)
             Container(
               padding: const EdgeInsets.all(16),
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               child: Row(
                 children: [
                   const Icon(Icons.filter_list, size: 20),
@@ -112,7 +112,8 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
               data: (reports) {
                 // Apply filters
                 final filteredReports = reports.where((report) {
-                  if (_filterCategory != null && report.category != _filterCategory) {
+                  if (_filterCategory != null &&
+                      report.category != _filterCategory) {
                     return false;
                   }
                   if (_filterStatus != null && report.status != _filterStatus) {
@@ -236,16 +237,11 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Kategorie',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+              Text('Kategorie', style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 8),
               DropdownButtonFormField<ReportCategory?>(
                 value: _filterCategory,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
                 items: [
                   const DropdownMenuItem<ReportCategory?>(
                     value: null,
@@ -264,19 +260,14 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                   });
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
-              Text(
-                'Status',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
+
+              Text('Status', style: Theme.of(context).textTheme.titleSmall),
               const SizedBox(height: 8),
               DropdownButtonFormField<ReportStatus?>(
                 value: _filterStatus,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(border: OutlineInputBorder()),
                 items: [
                   const DropdownMenuItem<ReportStatus?>(
                     value: null,
@@ -342,7 +333,7 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Content
               Expanded(
                 child: ListView(
@@ -381,9 +372,14 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(report.status).withOpacity(0.2),
+                            color: _getStatusColor(
+                              report.status,
+                            ).withOpacity(0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -397,9 +393,9 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Description
                     Text(
                       'Beschreibung',
@@ -410,9 +406,9 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                       report.description,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Location
                     Text(
                       'Standort',
@@ -425,15 +421,16 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            report.location.address ?? 'Kein Standort angegeben',
+                            report.location.address ??
+                                'Kein Standort angegeben',
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Actions
                     Row(
                       children: [
@@ -513,10 +510,7 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
 
 /// Legend item widget
 class _LegendItem extends StatelessWidget {
-  const _LegendItem({
-    required this.color,
-    required this.label,
-  });
+  const _LegendItem({required this.color, required this.label});
 
   final Color color;
   final String label;
@@ -537,10 +531,7 @@ class _LegendItem extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );

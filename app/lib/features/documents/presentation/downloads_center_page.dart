@@ -13,7 +13,8 @@ class DownloadsCenterPage extends ConsumerStatefulWidget {
   const DownloadsCenterPage({super.key});
 
   @override
-  ConsumerState<DownloadsCenterPage> createState() => _DownloadsCenterPageState();
+  ConsumerState<DownloadsCenterPage> createState() =>
+      _DownloadsCenterPageState();
 }
 
 class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
@@ -51,7 +52,9 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
                             icon: const Icon(Icons.clear),
                             onPressed: () {
                               _searchController.clear();
-                              ref.read(documentsSearchProvider.notifier).clear();
+                              ref
+                                  .read(documentsSearchProvider.notifier)
+                                  .clear();
                               setState(() {});
                             },
                           )
@@ -93,8 +96,8 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
                       ),
                       const SizedBox(width: 8),
                       // Kategorie Filter
-                      ...DocumentCategory.values.map((category) =>
-                        Padding(
+                      ...DocumentCategory.values.map(
+                        (category) => Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: CategoryFilterChip(
                             category: category,
@@ -144,13 +147,15 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
 
   Widget _buildSearchResults() {
     final searchResults = ref.watch(documentsSearchProvider);
-    
+
     return searchResults.when(
       loading: () => const LoadingWidget(),
       error: (error, stack) => AppErrorWidget(
         error: error.toString(),
         onRetry: () {
-          ref.read(documentsSearchProvider.notifier).search(_searchController.text);
+          ref
+              .read(documentsSearchProvider.notifier)
+              .search(_searchController.text);
         },
       ),
       data: (documents) {
@@ -182,8 +187,10 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
   }
 
   Widget _buildCategoryResults() {
-    final categoryDocuments = ref.watch(documentsByCategoryProvider(_selectedCategory!));
-    
+    final categoryDocuments = ref.watch(
+      documentsByCategoryProvider(_selectedCategory!),
+    );
+
     return categoryDocuments.when(
       loading: () => const LoadingWidget(),
       error: (error, stack) => AppErrorWidget(
@@ -222,7 +229,7 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
 
   Widget _buildPopularResults() {
     final popularDocuments = ref.watch(popularDocumentsProvider);
-    
+
     return popularDocuments.when(
       loading: () => const LoadingWidget(),
       error: (error, stack) => AppErrorWidget(
@@ -245,7 +252,7 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
 
   Widget _buildAllDocuments() {
     final allDocuments = ref.watch(allDocumentsProvider);
-    
+
     return allDocuments.when(
       loading: () => const LoadingWidget(),
       error: (error, stack) => AppErrorWidget(
@@ -290,9 +297,9 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
                       const Spacer(),
                       Text(
                         '${categoryDocs.length} Dokument${categoryDocs.length != 1 ? 'e' : ''}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey,
-                        ),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: Colors.grey),
                       ),
                     ],
                   ),

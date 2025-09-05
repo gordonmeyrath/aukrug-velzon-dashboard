@@ -40,38 +40,39 @@ class ReportLocation with _$ReportLocation {
     String? landmark,
   }) = _ReportLocation;
 
-  factory ReportLocation.fromJson(Map<String, dynamic> json) => _$ReportLocationFromJson(json);
+  factory ReportLocation.fromJson(Map<String, dynamic> json) =>
+      _$ReportLocationFromJson(json);
 }
 
 /// Categories for municipal issue reports
 enum ReportCategory {
   @JsonValue('roads_traffic')
   roadsTraffic,
-  
+
   @JsonValue('public_lighting')
   publicLighting,
-  
+
   @JsonValue('waste_management')
   wasteManagement,
-  
+
   @JsonValue('parks_green_spaces')
   parksGreenSpaces,
-  
+
   @JsonValue('water_drainage')
   waterDrainage,
-  
+
   @JsonValue('public_facilities')
   publicFacilities,
-  
+
   @JsonValue('vandalism')
   vandalism,
-  
+
   @JsonValue('environmental')
   environmental,
-  
+
   @JsonValue('accessibility')
   accessibility,
-  
+
   @JsonValue('other')
   other;
 
@@ -158,13 +159,13 @@ enum ReportCategory {
 enum ReportPriority {
   @JsonValue('low')
   low,
-  
+
   @JsonValue('medium')
   medium,
-  
+
   @JsonValue('high')
   high,
-  
+
   @JsonValue('urgent')
   urgent;
 
@@ -201,19 +202,19 @@ enum ReportPriority {
 enum ReportStatus {
   @JsonValue('submitted')
   submitted,
-  
+
   @JsonValue('received')
   received,
-  
+
   @JsonValue('in_progress')
   inProgress,
-  
+
   @JsonValue('resolved')
   resolved,
-  
+
   @JsonValue('closed')
   closed,
-  
+
   @JsonValue('rejected')
   rejected;
 

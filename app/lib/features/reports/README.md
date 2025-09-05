@@ -7,6 +7,7 @@ Das Reports-System (Mängelmelder) wurde erfolgreich implementiert und ermöglic
 ## Implementierte Features
 
 ### 1. Domain Layer
+
 - **Report**: Vollständiges Domain-Model mit Freezed-Annotations
 - **ReportLocation**: Geo-Lokalisierung für Reports
 - **ReportCategory**: 10 Kategorien (Straßen, Beleuchtung, Abfall, Parks, etc.)
@@ -14,12 +15,14 @@ Das Reports-System (Mängelmelder) wurde erfolgreich implementiert und ermöglic
 - **ReportStatus**: 6 Status-Zustände (eingereicht bis abgeschlossen)
 
 ### 2. Data Layer
+
 - **ReportsRepository**: Repository-Pattern mit offline-first Ansatz
 - **Fixture Data**: 10 realistische Demo-Reports in `assets/fixtures/reports.json`
 - **CRUD Operations**: Vollständige Create, Read, Update, Delete Funktionen
 - **Search & Filter**: Suche nach Text, Kategorie, Status und Geo-Standort
 
 ### 3. Presentation Layer
+
 - **ReportIssuePage**: Vollständiges Formular zum Melden von Problemen
   - Kategorieauswahl mit Icons
   - Prioritätsstufen mit Farbkodierung
@@ -39,6 +42,7 @@ Das Reports-System (Mängelmelder) wurde erfolgreich implementiert und ermöglic
   - `allReports`, `reportsByCategory`, `reportsByStatus`: Verschiedene Listen
 
 ### 4. Navigation & Integration
+
 - **Router Integration**: GoRouter Routen für `/resident/reports` und `/resident/report`
 - **Bottom Navigation**: Mängel-Tab im ResidentShell
 - **Deep Linking**: Direkter Zugang zu Meldung erstellen oder Liste anzeigen
@@ -46,16 +50,21 @@ Das Reports-System (Mängelmelder) wurde erfolgreich implementiert und ermöglic
 ## Technische Details
 
 ### Code-Generierung
+
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
+
 Generiert:
+
 - `report.freezed.dart`: Freezed-Models
 - `report.g.dart`: JSON-Serialization
 - `reports_provider.g.dart`: Riverpod Providers
 
 ### Fixture-Daten
+
 10 realistische Reports mit:
+
 - Verschiedene Kategorien (Straßenschäden, Beleuchtung, Vandalismus, etc.)
 - Echte Aukrug-Koordinaten und Adressen
 - Unterschiedliche Status und Prioritäten
@@ -63,6 +72,7 @@ Generiert:
 - Referenznummern im Format "AUK-2024-XXX"
 
 ### UI/UX Features
+
 - **Material 3 Design**: Moderne Cards, Chips und Buttons
 - **Accessibility**: Icons, Farbkodierung und klare Labels
 - **Responsive**: Funktioniert auf verschiedenen Bildschirmgrößen
@@ -72,12 +82,14 @@ Generiert:
 ## Nächste Schritte
 
 ### Sofort implementierbar:
+
 1. **Foto-Upload**: Camera/Gallery Integration
 2. **GPS-Lokalisierung**: Automatische Standorterfassung
 3. **Push-Notifications**: Status-Updates für eingereichte Meldungen
 4. **E-Mail Integration**: Automatische Bestätigungen
 
 ### Zukünftige Features:
+
 1. **Backend-Integration**: WordPress REST API Anbindung
 2. **Karten-Integration**: Visualisierung auf interaktiver Karte
 3. **Verwaltungs-Dashboard**: Admin-Interface für Bearbeitung
@@ -86,6 +98,7 @@ Generiert:
 ## Demo-Daten
 
 Die App enthält 10 vorgefertigte Reports zum Testen:
+
 1. Schlagloch auf Hauptstraße
 2. Defekte Straßenlaterne
 3. Graffiti am Spielplatz
@@ -100,6 +113,7 @@ Die App enthält 10 vorgefertigte Reports zum Testen:
 ## Testing
 
 Die Implementation wurde erfolgreich getestet:
+
 - ✅ Code-Generierung ohne Fehler
 - ✅ Flutter Compilation erfolgreich
 - ✅ Navigation zwischen Reports-Seiten

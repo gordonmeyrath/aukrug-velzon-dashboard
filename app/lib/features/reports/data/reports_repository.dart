@@ -25,14 +25,16 @@ class ReportsRepository {
       }
 
       // Load fixture reports
-      final String response = await rootBundle.loadString('assets/fixtures/reports.json');
+      final String response = await rootBundle.loadString(
+        'assets/fixtures/reports.json',
+      );
       final Map<String, dynamic> data = json.decode(response);
       final List<dynamic> reportsJson = data['reports'];
-      
+
       _cachedReports = reportsJson
           .map((json) => Report.fromJson(json as Map<String, dynamic>))
           .toList();
-      
+
       return _cachedReports!;
     } catch (e) {
       throw AppError.storage('Fehler beim Laden der Meldungen: $e');
@@ -44,18 +46,18 @@ class ReportsRepository {
     try {
       // In einer echten App würde hier die API-Anfrage stattfinden
       // Für die Demo fügen wir den Report lokal hinzu
-      
+
       final submittedReport = report.copyWith(
         id: DateTime.now().millisecondsSinceEpoch,
         submittedAt: DateTime.now(),
         status: ReportStatus.submitted,
         referenceNumber: _generateReferenceNumber(),
       );
-      
+
       // Füge zu Cache hinzu
       _cachedReports ??= [];
       _cachedReports!.insert(0, submittedReport);
-      
+
       return submittedReport;
     } catch (e) {
       throw AppError.network('Fehler beim Einreichen der Meldung: $e');
@@ -83,14 +85,15 @@ class ReportsRepository {
   /// Search reports by title or description
   Future<List<Report>> searchReports(String query) async {
     if (query.isEmpty) return [];
-    
+
     final allReports = await getAllReports();
     final lowerQuery = query.toLowerCase();
-    
+
     return allReports.where((report) {
       return report.title.toLowerCase().contains(lowerQuery) ||
-             report.description.toLowerCase().contains(lowerQuery) ||
-             (report.location.address?.toLowerCase().contains(lowerQuery) ?? false);
+          report.description.toLowerCase().contains(lowerQuery) ||
+          (report.location.address?.toLowerCase().contains(lowerQuery) ??
+              false);
     }).toList();
   }
 
@@ -107,9 +110,11 @@ class ReportsRepository {
   /// Get user's own reports (filtered by contact email)
   Future<List<Report>> getUserReports(String userEmail) async {
     final allReports = await getAllReports();
-    return allReports.where((report) => 
-        report.contactEmail == userEmail && !report.isAnonymous
-    ).toList();
+    return allReports
+        .where(
+          (report) => report.contactEmail == userEmail && !report.isAnonymous,
+        )
+        .toList();
   }
 
   /// Get reports within a geographic area
@@ -119,11 +124,13 @@ class ReportsRepository {
     required double radiusKm,
   }) async {
     final allReports = await getAllReports();
-    
+
     return allReports.where((report) {
       final distance = _calculateDistance(
-        latitude, longitude,
-        report.location.latitude, report.location.longitude,
+        latitude,
+        longitude,
+        report.location.latitude,
+        report.location.longitude,
       );
       return distance <= radiusKm;
     }).toList();
@@ -139,18 +146,23 @@ class ReportsRepository {
     bool? hasImages,
   }) async {
     final allReports = await getAllReports();
-    
+
     return allReports.where((report) {
       if (category != null && report.category != category) return false;
       if (status != null && report.status != status) return false;
       if (priority != null && report.priority != priority) return false;
-      if (fromDate != null && report.submittedAt != null && 
-          report.submittedAt!.isBefore(fromDate)) return false;
-      if (toDate != null && report.submittedAt != null && 
-          report.submittedAt!.isAfter(toDate)) return false;
-      if (hasImages != null && 
-          (report.imageUrls?.isNotEmpty ?? false) != hasImages) return false;
-      
+      if (fromDate != null &&
+          report.submittedAt != null &&
+          report.submittedAt!.isBefore(fromDate))
+        return false;
+      if (toDate != null &&
+          report.submittedAt != null &&
+          report.submittedAt!.isAfter(toDate))
+        return false;
+      if (hasImages != null &&
+          (report.imageUrls?.isNotEmpty ?? false) != hasImages)
+        return false;
+
       return true;
     }).toList();
   }
@@ -167,19 +179,27 @@ class ReportsRepository {
   }
 
   /// Calculate distance between two coordinates in kilometers
-  double _calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+  double _calculateDistance(
+    double lat1,
+    double lon1,
+    double lat2,
+    double lon2,
+  ) {
     // Vereinfachte Distanzberechnung (für Demo ausreichend)
     const double earthRadius = 6371; // km
-    
+
     final dLat = _degreesToRadians(lat2 - lat1);
     final dLon = _degreesToRadians(lon2 - lon1);
-    
-    final a = math.sin(dLat / 2) * math.sin(dLat / 2) +
-        math.cos(_degreesToRadians(lat1)) * math.cos(_degreesToRadians(lat2)) *
-        math.sin(dLon / 2) * math.sin(dLon / 2);
-    
+
+    final a =
+        math.sin(dLat / 2) * math.sin(dLat / 2) +
+        math.cos(_degreesToRadians(lat1)) *
+            math.cos(_degreesToRadians(lat2)) *
+            math.sin(dLon / 2) *
+            math.sin(dLon / 2);
+
     final c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
-    
+
     return earthRadius * c;
   }
 
