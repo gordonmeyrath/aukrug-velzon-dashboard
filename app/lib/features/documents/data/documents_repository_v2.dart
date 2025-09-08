@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -56,22 +57,29 @@ class DocumentsRepository {
 
   /// Search documents by title, description, or tags
   Future<List<Document>> searchDocuments(String query) async {
-    if (query.isEmpty) return [];
+    if (query.isEmpty) {
+      return [];
+    }
 
     final allDocs = await getAllDocuments();
     final lowerQuery = query.toLowerCase();
 
     return allDocs.where((doc) {
       // Search in title
-      if (doc.title.toLowerCase().contains(lowerQuery)) return true;
+      if (doc.title.toLowerCase().contains(lowerQuery)) {
+        return true;
+      }
 
       // Search in description
-      if (doc.description.toLowerCase().contains(lowerQuery)) return true;
+      if (doc.description.toLowerCase().contains(lowerQuery)) {
+        return true;
+      }
 
       // Search in tags
       if (doc.tags?.any((tag) => tag.toLowerCase().contains(lowerQuery)) ==
-          true)
+          true) {
         return true;
+      }
 
       return false;
     }).toList();

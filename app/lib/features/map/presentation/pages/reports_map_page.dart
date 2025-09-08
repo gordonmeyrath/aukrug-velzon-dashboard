@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/color_extensions.dart';
+import '../../../../core/widgets/app_scaffold.dart';
 import '../../../reports/domain/report.dart';
 import '../../../reports/presentation/reports_provider.dart';
 import '../widgets/aukrug_map.dart';
@@ -23,16 +25,14 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
   Widget build(BuildContext context) {
     final reportsAsync = ref.watch(allReportsProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meldungen Karte'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: 'Meldungen Karte',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.filter_list),
+          onPressed: _showFilterDialog,
+        ),
+      ],
       body: Column(
         children: [
           // Filter status bar
@@ -379,7 +379,7 @@ class _ReportsMapPageState extends ConsumerState<ReportsMapPage> {
                           decoration: BoxDecoration(
                             color: _getStatusColor(
                               report.status,
-                            ).withOpacity(0.2),
+                            ).alphaFrac(0.2),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(

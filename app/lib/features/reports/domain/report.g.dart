@@ -33,6 +33,7 @@ _$ReportImpl _$$ReportImplFromJson(Map<String, dynamic> json) => _$ReportImpl(
           ? null
           : DateTime.parse(json['responseAt'] as String),
       referenceNumber: json['referenceNumber'] as String?,
+      version: (json['version'] as num?)?.toInt() ?? 1,
     );
 
 Map<String, dynamic> _$$ReportImplToJson(_$ReportImpl instance) =>
@@ -54,6 +55,7 @@ Map<String, dynamic> _$$ReportImplToJson(_$ReportImpl instance) =>
       'municipalityResponse': instance.municipalityResponse,
       'responseAt': instance.responseAt?.toIso8601String(),
       'referenceNumber': instance.referenceNumber,
+      'version': instance.version,
     };
 
 const _$ReportCategoryEnumMap = {

@@ -82,6 +82,55 @@ PlacesRepository placesRepository(PlacesRepositoryRef ref) =>
 - **SharedPreferences**: Simple key-value data (user preferences)
 - **Assets**: Static fixture data for offline fallback
 
+#### Incremental Sync & Data Origin (Reports Feature)
+
+The reports module implements an evolving offline model with explicit origin tracking and delta-ready refresh logic.
+
+DataOrigin enum:
+
+```
+enum DataOrigin { freshFullSync, cachePrimed, cacheOnly }
+```
+
+Meaning:
+
+- freshFullSync: A complete dataset load just updated the cache (baseline reference; updates `lastFullSyncAt`).
+- cachePrimed: Cached data served instantly while a background refresh (full or delta) runs.
+- cacheOnly: Only cached data available (offline or repeated refresh failures/backoff).
+
+State Additions:
+
+- `lastFullSyncAt`: Timestamp of last confirmed full dataset load.
+- `newSinceSyncCount`: Number of reports changed/added since `lastFullSyncAt`.
+- `showOnlyNewSinceSync`: UI filter to narrow view to incremental changes.
+- `dataOrigin`: Current origin category (not persisted; session scope).
+
+Refresh Logic:
+
+1. First load: cache-first (if available) → background refresh.
+2. `refreshOrDeltaSync(lastFullSyncAt)`: attempts delta (`fetchChangesSince`) else falls back to full sync.
+3. Merge strategy: Replace by ID; prefer record with latest `updatedAt` (fallback `submittedAt`).
+4. Exponential backoff on failures (2s,4s,8s... capped at 60s) marks origin `cacheOnly` if failures persist.
+
+UI Feedback:
+
+- Badge in AppBar displays `newSinceSyncCount` (capped at 99+).
+- FilterChip “Neu seit Sync”.
+- SnackBar appears when a delta introduces new items (without a full sync) offering quick filter activation.
+- Distinct icons: `cachePrimed` (cloud_sync), `cacheOnly` (cloud_off), offline (wifi_off).
+
+Persistence:
+
+- Preferences store: query, category, status, sort, staleMinutes, lastFullSyncAt, showOnlyNewSinceSync.
+- Not stored: dataOrigin, newSinceSyncCount (recomputed for session integrity).
+
+Planned Extensions:
+
+- Real delta endpoint `/reports?since=ISO8601` including deletions (tombstone list or deletedAt field).
+- Conflict audit & optimistic submission reconciliation.
+- Cache schema versioning; mismatch triggers mandatory full sync.
+
+
 ### 4. Code Generation
 
 **Generated Components**:
@@ -171,6 +220,50 @@ ShellRoute(
 2. **Consent** → GDPR compliance check
 3. **Audience Picker** → Tourist vs. Resident selection
 4. **Shell Navigation** → Feature-specific bottom navigation
+
+## Community Module
+
+The Community module provides a BuddyBoss-inspired social layer with a feed, groups, messages, notifications, and profiles. It currently uses fixture-backed data and Riverpod providers, with an offline-first path planned using Isar.
+
+Structure:
+
+```
+features/community/
+  domain/        # Plain Dart models: user, group, post, message
+  data/          # CommunityApi loads from assets/fixtures/community/*.json
+  application/   # Riverpod providers (users, groups, feed, messages)
+  presentation/  # CommunityShell + pages (feed, groups, messages, notifications, profile)
+```
+
+Routing:
+
+```
+/community/feed
+/community/groups
+/community/groups/:id       # detail (planned)
+/community/messages
+/community/messages/:id     # chat detail (planned)
+/community/notifications
+/community/profile
+```
+
+Design System:
+
+- Central theme in `core/theme/app_theme.dart`
+- BuddyBoss-inspired tokens/components in `core/design/*` (AppButton, AppCard, Avatar, Badge)
+- Applied globally; pages adopt consistent typography and cards
+
+Data Loading:
+
+- `CommunityApi` uses rootBundle to read JSON fixtures under `assets/fixtures/community/`
+- Providers expose lists for UI: `usersProvider`, `groupsProvider`, `feedProvider`, `messagesProvider`
+- Optimistic methods stubbed: `createPost`, `sendMessage`
+
+Next Steps:
+
+- Add Isar schemas/repositories for offline caching and sync
+- Implement group/chat detail screens
+- Wire optimistic updates and in-app notification overlays
 
 ## State Management
 

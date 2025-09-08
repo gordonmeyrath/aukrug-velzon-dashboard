@@ -6,7 +6,7 @@ class AppConfig {
   // API Configuration
   static const String apiBase = String.fromEnvironment(
     'API_BASE',
-    defaultValue: 'http://git.mioconnex.local/wp-json/aukrug/v1',
+    defaultValue: 'https://aukrug.mioconnex.com/wp-json/aukrug/v1',
   );
 
   static const Duration apiTimeout = Duration(seconds: 30);
@@ -21,6 +21,11 @@ class AppConfig {
   static const bool enableLogging = bool.fromEnvironment(
     'ENABLE_LOGGING',
     defaultValue: true,
+  );
+
+  static const bool enableSyncDebug = bool.fromEnvironment(
+    'ENABLE_SYNC_DEBUG',
+    defaultValue: false,
   );
 
   // Storage Configuration

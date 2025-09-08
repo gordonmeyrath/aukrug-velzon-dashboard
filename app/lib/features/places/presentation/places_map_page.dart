@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/theme/color_extensions.dart';
 import '../../../localization/app_localizations.dart';
 import '../../map/presentation/widgets/aukrug_map.dart';
 import '../../map/presentation/widgets/map_marker_factory.dart';
@@ -150,7 +151,7 @@ class _PlaceDetailCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: colorScheme.primary.withOpacity(0.1),
+                  color: colorScheme.primary.alphaFrac(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(

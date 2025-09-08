@@ -1,0 +1,25 @@
+{
+    "landingPage": "/wp-admin/plugins.php",
+    "preferredVersions": {
+        "php": "8.2",
+        "wp": "latest"
+    },
+    "siteOptions": {
+        "blogname": "Aukrug Playground"
+    },
+    "steps": [
+        {
+            "step": "mkdir",
+            "path": "/wp-content/plugins/wpaukrug"
+        },
+        {
+            "step": "writeFile",
+            "path": "/wp-content/plugins/wpaukrug/wpaukrug.php",
+            "data": "<?php\n/*\nPlugin Name: wpaukrug\nPlugin URI: https://aukrug.de\nDescription: Development stub for WordPress Playground integration.\nVersion: 0.0.1\nAuthor: MioWorkx\nAuthor URI: https://mioworkx.de\nText Domain: wpaukrug\n*/\nif (!defined('ABSPATH')) { exit; }\nadd_action('admin_notices', function () {\n    echo \"<div class='notice notice-success'><p>Plugin 'wpaukrug' aktiviert.</p></div>\";\n});\n"
+        },
+        {
+            "step": "activatePlugin",
+            "plugin": "wpaukrug/wpaukrug.php"
+        }
+    ]
+}

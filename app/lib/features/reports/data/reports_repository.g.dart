@@ -6,7 +6,7 @@ part of 'reports_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$reportsRepositoryHash() => r'6391a0a9f96adf8145c9420691d8d0730da205b5';
+String _$reportsRepositoryHash() => r'f155fc74fe9ded239996f67ede88944bd7bfc480';
 
 /// See also [reportsRepository].
 @ProviderFor(reportsRepository)

@@ -2,6 +2,19 @@
 
 A new Flutter project.
 
+What’s new (v0.9.1)
+
+
+- Community: Offline-first (Isar) with cache-first providers and optimistic updates
+- Pull-to-Refresh on Feed, Groups, Messages; manual refresh providers
+- Group & Chat detail pages; composer uses current user id
+- Milestone note: MILESTONE_COMMUNITY_OFFLINE_FIRST_v0.9.1.md
+
+Try it:
+
+- Open Community → pull to refresh on Feed/Groups/Messages
+- Create a post or send a message → appears immediately (optimistic)
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

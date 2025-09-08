@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../core/services/location_service.dart';
+import '../../../../core/theme/color_extensions.dart';
 
 /// Interactive map widget for displaying Aukrug locations
 ///
@@ -19,6 +22,8 @@ class AukrugMap extends ConsumerStatefulWidget {
     this.onMapTap,
     this.onMarkerTap,
     this.height,
+    this.onViewportChanged,
+    this.onMapReady,
   });
 
   /// Initial center position of the map (defaults to Aukrug center)
@@ -42,12 +47,19 @@ class AukrugMap extends ConsumerStatefulWidget {
   /// Fixed height for the map (if null, expands to parent)
   final double? height;
 
+  /// Callback wenn die Karte nach einer Interaktion eine neue Position einnimmt
+  final void Function(LatLng center, double zoom)? onViewportChanged;
+
+  /// Wird einmalig aufgerufen wenn der MapController initialisiert ist
+  final void Function(MapController controller)? onMapReady;
+
   @override
   ConsumerState<AukrugMap> createState() => _AukrugMapState();
 }
 
 class _AukrugMapState extends ConsumerState<AukrugMap> {
   late final MapController _mapController;
+  late final StreamSubscription _mapSub;
 
   // Aukrug center coordinates (approximate)
   static const LatLng _aukrugCenter = LatLng(54.1333, 9.8833);
@@ -56,10 +68,25 @@ class _AukrugMapState extends ConsumerState<AukrugMap> {
   void initState() {
     super.initState();
     _mapController = MapController();
+    // onReady nach erstem Frame triggern
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        widget.onMapReady?.call(_mapController);
+      }
+    });
+    // Bewegungen beobachten um Viewport zu persistieren
+    _mapSub = _mapController.mapEventStream.listen((event) {
+      if (event is MapEventMoveEnd) {
+        final c = _mapController.camera.center;
+        final z = _mapController.camera.zoom;
+        widget.onViewportChanged?.call(c, z);
+      }
+    });
   }
 
   @override
   void dispose() {
+    _mapSub.cancel();
     _mapController.dispose();
     super.dispose();
   }
@@ -142,7 +169,7 @@ class _AukrugMapState extends ConsumerState<AukrugMap> {
                         border: Border.all(color: Colors.white, width: 3),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Colors.black.alphaFrac(0.3),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -259,7 +286,7 @@ class _MapControlButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.alphaFrac(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

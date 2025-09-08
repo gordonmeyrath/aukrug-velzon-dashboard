@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../../../core/theme/color_extensions.dart';
 import '../../domain/document.dart';
 
 class DocumentCard extends StatelessWidget {
@@ -54,12 +55,12 @@ class DocumentCard extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: _getCategoryColor(
                         document.category,
-                      ).withOpacity(0.1),
+                      ).alphaFrac(0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: _getCategoryColor(
                           document.category,
-                        ).withOpacity(0.3),
+                        ).alphaFrac(0.3),
                       ),
                     ),
                     child: Text(
@@ -110,8 +111,8 @@ class DocumentCard extends StatelessWidget {
                         'Beliebt',
                         style: TextStyle(fontSize: 12),
                       ),
-                      backgroundColor: Colors.amber.withOpacity(0.1),
-                      side: BorderSide(color: Colors.amber.withOpacity(0.3)),
+                      backgroundColor: Colors.amber.alphaFrac(0.1),
+                      side: BorderSide(color: Colors.amber.alphaFrac(0.3)),
                       visualDensity: VisualDensity.compact,
                     ),
                   // Authentifizierung erforderlich Badge
@@ -122,8 +123,8 @@ class DocumentCard extends StatelessWidget {
                         'Anmeldung erforderlich',
                         style: TextStyle(fontSize: 12),
                       ),
-                      backgroundColor: Colors.orange.withOpacity(0.1),
-                      side: BorderSide(color: Colors.orange.withOpacity(0.3)),
+                      backgroundColor: Colors.orange.alphaFrac(0.1),
+                      side: BorderSide(color: Colors.orange.alphaFrac(0.3)),
                       visualDensity: VisualDensity.compact,
                     ),
                 ],
@@ -143,7 +144,7 @@ class DocumentCard extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
+                            color: Colors.grey.alphaFrac(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "g1",
+        "title": "Aukrug Forum",
+        "description": "Allgemeine Diskussionen",
+        "membersCount": 120,
+        "isPublic": true
+    },
+    {
+        "id": "g2",
+        "title": "Radwege & Routen",
+        "description": "Tipps und Ausflüge",
+        "membersCount": 58,
+        "isPublic": true
+    },
+    {
+        "id": "g3",
+        "title": "Eltern & Kita",
+        "description": "Austausch für Eltern",
+        "membersCount": 34,
+        "isPublic": false
+    }
+]

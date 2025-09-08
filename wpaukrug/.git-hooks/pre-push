@@ -1,0 +1,151 @@
+#!/bin/bash
+#
+# Pre-push hook - Validate before pushing to remotes
+# Installed by: git config core.hooksPath .git-hooks
+#
+
+set -e
+
+# Colors
+readonly RED='\033[31m'
+readonly GREEN='\033[32m'
+readonly YELLOW='\033[33m'
+readonly BLUE='\033[34m'
+readonly RESET='\033[0m'
+
+readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+readonly REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+
+log_info() {
+    echo -e "${BLUE}[PRE-PUSH]${RESET} $*" >&2
+}
+
+log_warn() {
+    echo -e "${YELLOW}[PRE-PUSH]${RESET} $*" >&2
+}
+
+log_error() {
+    echo -e "${RED}[PRE-PUSH]${RESET} $*" >&2
+}
+
+log_success() {
+    echo -e "${GREEN}[PRE-PUSH]${RESET} $*" >&2
+}
+
+# Read push information from stdin
+remote="$1"
+url="$2"
+
+log_info "Validating push to remote '$remote' ($url)"
+
+# Change to repository root
+cd "$REPO_ROOT"
+
+# Check if we're pushing to origin or mirror
+if [[ "$remote" != "origin" ]] && [[ "$remote" != "mirror" ]]; then
+    log_warn "Pushing to unknown remote '$remote' - skipping validation"
+    exit 0
+fi
+
+# Read the push details
+while read local_ref local_sha remote_ref remote_sha; do
+    if [[ "$local_sha" == "0000000000000000000000000000000000000000" ]]; then
+        # Deleting a branch
+        log_info "Deleting branch $(basename "$remote_ref") on $remote"
+        continue
+    fi
+    
+    if [[ "$remote_sha" == "0000000000000000000000000000000000000000" ]]; then
+        # Creating a new branch
+        log_info "Creating new branch $(basename "$remote_ref") on $remote"
+    else
+        # Updating existing branch
+        log_info "Updating branch $(basename "$remote_ref") on $remote"
+    fi
+    
+    # Validate branch name
+    branch_name="$(basename "$remote_ref")"
+    if [[ ! "$branch_name" =~ ^(main|master|develop|feature/|bugfix/|hotfix/|release/) ]]; then
+        log_warn "Branch name '$branch_name' doesn't follow naming convention"
+    fi
+    
+    # Check for secrets or sensitive files
+    log_info "Scanning for sensitive files..."
+    
+    # Get list of files being pushed
+    if [[ "$remote_sha" == "0000000000000000000000000000000000000000" ]]; then
+        # New branch - check all files
+        files_to_check="$(git diff --name-only --diff-filter=A "$local_sha")"
+    else
+        # Existing branch - check changed files
+        files_to_check="$(git diff --name-only "$remote_sha..$local_sha")"
+    fi
+    
+    # Check for sensitive patterns
+    sensitive_patterns=(
+        "\.env$"
+        "\.env\."
+        "password"
+        "secret"
+        "private.*key"
+        "\.pem$"
+        "\.p12$"
+        "\.pfx$"
+        "config/database\.php"
+        "wp-config\.php"
+    )
+    
+    for file in $files_to_check; do
+        if [[ -f "$file" ]]; then
+            for pattern in "${sensitive_patterns[@]}"; do
+                if [[ "$file" =~ $pattern ]]; then
+                    log_error "Sensitive file detected: $file"
+                    log_error "Please ensure no secrets are committed!"
+                    exit 1
+                fi
+            done
+            
+            # Check file contents for common secrets
+            if grep -q -i -E "(password|secret|key|token).*[=:].*['\"][^'\"]{8,}" "$file" 2>/dev/null; then
+                log_warn "Potential secret detected in $file - please review manually"
+            fi
+        fi
+    done
+    
+    # Validate Flutter app if changed
+    if echo "$files_to_check" | grep -q "^app/"; then
+        log_info "Flutter app changes detected - running quick validation..."
+        if command -v flutter >/dev/null 2>&1; then
+            cd "$REPO_ROOT/app"
+            if ! flutter analyze --no-pub >/dev/null 2>&1; then
+                log_warn "Flutter analysis issues detected - please review"
+            fi
+            cd "$REPO_ROOT"
+        fi
+    fi
+    
+    # Validate WordPress plugin if changed
+    if echo "$files_to_check" | grep -q -E "^(wpaukrug/|plugin/)"; then
+        log_info "WordPress plugin changes detected..."
+        
+        # Check PHP syntax
+        for php_file in $(echo "$files_to_check" | grep "\.php$"); do
+            if [[ -f "$php_file" ]] && command -v php >/dev/null 2>&1; then
+                if ! php -l "$php_file" >/dev/null 2>&1; then
+                    log_error "PHP syntax error in $php_file"
+                    exit 1
+                fi
+            fi
+        done
+    fi
+done
+
+# Final connectivity check for the target remote
+log_info "Checking connectivity to $remote..."
+if ! git fetch "$remote" --dry-run >/dev/null 2>&1; then
+    log_error "Cannot reach remote '$remote' - aborting push"
+    exit 1
+fi
+
+log_success "Pre-push validation completed successfully"
+exit 0

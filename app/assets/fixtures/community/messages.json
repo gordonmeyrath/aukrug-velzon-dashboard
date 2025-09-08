@@ -1,0 +1,42 @@
+[
+    {
+        "id": "m1",
+        "fromId": "u2",
+        "toId": "u1",
+        "text": "Hi Anna, kommst du morgen zum Treffen?",
+        "createdAt": "2025-09-03T12:00:00Z",
+        "read": false
+    },
+    {
+        "id": "m2",
+        "fromId": "u1",
+        "toId": "u2",
+        "text": "Ja, bin dabei!",
+        "createdAt": "2025-09-03T12:05:00Z",
+        "read": true
+    },
+    {
+        "id": "m3",
+        "fromId": "u3",
+        "toId": "u1",
+        "text": "Danke für die Unterstützung!",
+        "createdAt": "2025-09-02T15:10:00Z",
+        "read": false
+    },
+    {
+        "id": "m4",
+        "fromId": "u4",
+        "toId": "u5",
+        "text": "Schöne Fotos!",
+        "createdAt": "2025-09-01T09:42:00Z",
+        "read": true
+    },
+    {
+        "id": "m5",
+        "fromId": "u5",
+        "toId": "u4",
+        "text": "Danke dir :)",
+        "createdAt": "2025-09-01T09:45:00Z",
+        "read": true
+    }
+]

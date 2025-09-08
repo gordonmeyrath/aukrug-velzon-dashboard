@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -55,7 +56,9 @@ class DocumentsRepository {
 
   /// Search documents by title, description, or tags
   Future<List<Document>> searchDocuments(String query) async {
-    if (query.isEmpty) return [];
+    if (query.isEmpty) {
+      return [];
+    }
 
     final allDocs = await getAllDocuments();
     final lowerQuery = query.toLowerCase();
@@ -69,8 +72,9 @@ class DocumentsRepository {
 
       // Search in tags
       if (doc.tags?.any((tag) => tag.toLowerCase().contains(lowerQuery)) ==
-          true)
+          true) {
         return true;
+      }
 
       return false;
     }).toList();

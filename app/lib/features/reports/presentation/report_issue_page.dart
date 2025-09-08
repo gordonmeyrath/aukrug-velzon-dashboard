@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/theme/color_extensions.dart';
 import '../../../core/services/location_service.dart';
 import '../../../core/widgets/photo_attachment_widget.dart';
 import '../../../localization/app_localizations.dart';
@@ -86,6 +87,7 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.report),
+        automaticallyImplyLeading: false, // Da bereits in AppShell
         actions: [
           IconButton(
             icon: const Icon(Icons.help_outline),
@@ -173,11 +175,11 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                           selected: isSelected,
                           label: Text(priority.displayName),
                           backgroundColor: isSelected
-                              ? _getPriorityColor(priority).withOpacity(0.3)
+                              ? _getPriorityColor(priority).alphaFrac(0.3)
                               : null,
                           selectedColor: _getPriorityColor(
                             priority,
-                          ).withOpacity(0.5),
+                          ).alphaFrac(0.5),
                           onSelected: (selected) {
                             if (selected) {
                               setState(() {
@@ -316,17 +318,22 @@ class _ReportIssuePageState extends ConsumerState<ReportIssuePage> {
                     if (_showLocationMap) ...[
                       const SizedBox(height: 16),
                       SizedBox(
-                        height: 200,
+                        height: 220,
                         child: AukrugMap(
+                          center: _selectedLocation,
                           markers: _selectedLocation != null
                               ? [
                                   MapMarkerFactory.createLocationMarker(
                                     _selectedLocation!,
-                                    color: Colors.red,
+                                    label: 'Standort',
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
                                     icon: Icons.location_on,
                                   ),
                                 ]
-                              : [],
+                              : const [],
+                          showUserLocation: true,
                           onMapTap: (latLng) {
                             setState(() {
                               _selectedLocation = latLng;

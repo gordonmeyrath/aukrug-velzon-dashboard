@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+// ignore_for_file: unused_import
 import 'package:go_router/go_router.dart';
 
 import '../../../core/widgets/app_error_widget.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../domain/document.dart';
 import 'documents_provider.dart';
-import 'widgets/document_card.dart';
 import 'widgets/category_filter_chip.dart';
+import 'widgets/document_card.dart';
 
 class DownloadsCenterPage extends ConsumerStatefulWidget {
   const DownloadsCenterPage({super.key});
@@ -33,8 +34,7 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Downloads'),
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 0,
+        automaticallyImplyLeading: false, // Da bereits in AppShell
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(120),
           child: Padding(
@@ -121,28 +121,24 @@ class _DownloadsCenterPageState extends ConsumerState<DownloadsCenterPage> {
           ),
         ),
       ),
-      body: _buildBody(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            Expanded(
+              child: _searchController.text.isNotEmpty
+                  ? _buildSearchResults()
+                  : _selectedCategory != null
+                  ? _buildCategoryResults()
+                  : _showPopularOnly
+                  ? _buildPopularResults()
+                  : _buildAllDocuments(),
+            ),
+          ],
+        ),
+      ),
     );
-  }
-
-  Widget _buildBody() {
-    // Wenn Suche aktiv ist
-    if (_searchController.text.isNotEmpty) {
-      return _buildSearchResults();
-    }
-
-    // Wenn Kategorie-Filter aktiv ist
-    if (_selectedCategory != null) {
-      return _buildCategoryResults();
-    }
-
-    // Wenn nur beliebte Dokumente angezeigt werden sollen
-    if (_showPopularOnly) {
-      return _buildPopularResults();
-    }
-
-    // Standard: Alle Dokumente mit Kategorien
-    return _buildAllDocuments();
   }
 
   Widget _buildSearchResults() {

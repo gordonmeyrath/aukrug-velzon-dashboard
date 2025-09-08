@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart'
+    show ThemeMode; // ensure same ThemeMode type
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user.freezed.dart';
@@ -38,7 +40,7 @@ class UserPreferences with _$UserPreferences {
     @Default(false) bool enableCrashReporting,
   }) = _UserPreferences;
 
-  factory UserPreferences.fromJson(Map<String, dynamic> json) => 
+  factory UserPreferences.fromJson(Map<String, dynamic> json) =>
       _$UserPreferencesFromJson(json);
 }
 
@@ -52,31 +54,33 @@ class PrivacySettings with _$PrivacySettings {
     @Default(false) bool consentToAnalytics,
     @Default(false) bool consentToMarketing,
     @Default(false) bool consentToDataSharing,
-    
+
     // Datenverarbeitungszwecke
-    @Default(true) bool allowReportSubmission, // Essential für App-Funktionalität
+    @Default(true)
+    bool allowReportSubmission, // Essential für App-Funktionalität
     @Default(false) bool allowLocationTracking,
     @Default(false) bool allowUsageAnalytics,
     @Default(false) bool allowPersonalization,
-    
+
     // Datenspeicherung und -aufbewahrung
-    @Default(DataRetentionPeriod.oneYear) DataRetentionPeriod dataRetentionPeriod,
+    @Default(DataRetentionPeriod.oneYear)
+    DataRetentionPeriod dataRetentionPeriod,
     @Default(false) bool autoDeleteOldReports,
     @Default(false) bool anonymizeOldData,
-    
+
     // Benutzerrechte-Status
     DateTime? lastDataExportRequest,
     DateTime? lastDataDeletionRequest,
     DateTime? consentGivenAt,
     DateTime? consentWithdrawnAt,
-    
+
     // Kontaktpräferenzen
     @Default(false) bool allowEmailContact,
     @Default(false) bool allowPhoneContact,
     @Default(ContactReason.essential) ContactReason preferredContactReason,
   }) = _PrivacySettings;
 
-  factory PrivacySettings.fromJson(Map<String, dynamic> json) => 
+  factory PrivacySettings.fromJson(Map<String, dynamic> json) =>
       _$PrivacySettingsFromJson(json);
 }
 
@@ -94,7 +98,7 @@ class UserSession with _$UserSession {
     @Default(false) bool isActive,
   }) = _UserSession;
 
-  factory UserSession.fromJson(Map<String, dynamic> json) => 
+  factory UserSession.fromJson(Map<String, dynamic> json) =>
       _$UserSessionFromJson(json);
 }
 
@@ -112,7 +116,7 @@ class UserDataExport with _$UserDataExport {
     int? fileSizeBytes,
   }) = _UserDataExport;
 
-  factory UserDataExport.fromJson(Map<String, dynamic> json) => 
+  factory UserDataExport.fromJson(Map<String, dynamic> json) =>
       _$UserDataExportFromJson(json);
 }
 
@@ -121,13 +125,13 @@ class UserDataExport with _$UserDataExport {
 enum LocationAccuracy {
   @JsonValue('low')
   low,
-  
+
   @JsonValue('balanced')
   balanced,
-  
+
   @JsonValue('high')
   high,
-  
+
   @JsonValue('precise')
   precise;
 
@@ -161,10 +165,10 @@ enum LocationAccuracy {
 enum ImageQuality {
   @JsonValue('low')
   low,
-  
+
   @JsonValue('standard')
   standard,
-  
+
   @JsonValue('high')
   high;
 
@@ -194,16 +198,16 @@ enum ImageQuality {
 enum DataRetentionPeriod {
   @JsonValue('three_months')
   threeMonths,
-  
+
   @JsonValue('six_months')
   sixMonths,
-  
+
   @JsonValue('one_year')
   oneYear,
-  
+
   @JsonValue('two_years')
   twoYears,
-  
+
   @JsonValue('custom')
   custom;
 
@@ -241,13 +245,13 @@ enum DataRetentionPeriod {
 enum ContactReason {
   @JsonValue('essential')
   essential,
-  
+
   @JsonValue('reports_updates')
   reportsUpdates,
-  
+
   @JsonValue('service_notifications')
   serviceNotifications,
-  
+
   @JsonValue('all')
   all;
 
@@ -278,24 +282,4 @@ enum ContactReason {
   }
 }
 
-enum ThemeMode {
-  @JsonValue('system')
-  system,
-  
-  @JsonValue('light')
-  light,
-  
-  @JsonValue('dark')
-  dark;
-
-  String get displayName {
-    switch (this) {
-      case ThemeMode.system:
-        return 'System-Einstellung';
-      case ThemeMode.light:
-        return 'Hell';
-      case ThemeMode.dark:
-        return 'Dunkel';
-    }
-  }
-}
+// Entfernt: eigenes ThemeMode Enum – wir verwenden Flutter ThemeMode direkt.

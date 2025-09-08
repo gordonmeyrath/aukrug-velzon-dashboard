@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/color_extensions.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../data/auth_service.dart';
 import '../domain/user.dart';
@@ -20,16 +22,16 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
   final _passwordController = TextEditingController();
   final _displayNameController = TextEditingController();
   final _phoneController = TextEditingController();
-  
+
   bool _isSignIn = true;
   bool _isLoading = false;
   bool _obscurePassword = true;
-  
+
   // DSGVO Consent States
   bool _consentToDataProcessing = false;
   bool _consentToLocationProcessing = false;
   bool _consentToPhotoProcessing = false;
-  bool _allowReportSubmission = true; // Mindestvoraussetzung
+  final bool _allowReportSubmission = true; // Mindestvoraussetzung
   DataRetentionPeriod _dataRetentionPeriod = DataRetentionPeriod.oneYear;
 
   @override
@@ -43,56 +45,53 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isSignIn ? 'Anmelden' : 'Registrieren'),
-        centerTitle: true,
-      ),
-      body: _isLoading 
-        ? const LoadingWidget()
-        : SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildAuthModeToggle(),
-                  const SizedBox(height: 32),
-                  
-                  _buildEmailField(),
-                  const SizedBox(height: 16),
-                  
-                  _buildPasswordField(),
-                  const SizedBox(height: 16),
-                  
-                  // Zusätzliche Felder für Registrierung
-                  if (!_isSignIn) ...[
-                    _buildDisplayNameField(),
+    return AppScaffold(
+      title: _isSignIn ? 'Anmelden' : 'Registrieren',
+      body: _isLoading
+          ? const LoadingWidget()
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(24.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildAuthModeToggle(),
+                    const SizedBox(height: 32),
+
+                    _buildEmailField(),
                     const SizedBox(height: 16),
-                    
-                    _buildPhoneField(),
-                    const SizedBox(height: 24),
-                    
-                    _buildDSGVOConsent(),
-                    const SizedBox(height: 24),
+
+                    _buildPasswordField(),
+                    const SizedBox(height: 16),
+
+                    // Zusätzliche Felder für Registrierung
+                    if (!_isSignIn) ...[
+                      _buildDisplayNameField(),
+                      const SizedBox(height: 16),
+
+                      _buildPhoneField(),
+                      const SizedBox(height: 24),
+
+                      _buildDSGVOConsent(),
+                      const SizedBox(height: 24),
+                    ],
+
+                    _buildSubmitButton(),
+                    const SizedBox(height: 16),
+
+                    _buildAnonymousOption(),
                   ],
-                  
-                  _buildSubmitButton(),
-                  const SizedBox(height: 16),
-                  
-                  _buildAnonymousOption(),
-                ],
+                ),
               ),
             ),
-          ),
     );
   }
 
   Widget _buildAuthModeToggle() {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -130,9 +129,9 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
           text,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: isSelected 
-              ? theme.colorScheme.onPrimary 
-              : theme.colorScheme.onSurfaceVariant,
+            color: isSelected
+                ? theme.colorScheme.onPrimary
+                : theme.colorScheme.onSurfaceVariant,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -169,7 +168,9 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
         labelText: 'Passwort',
         prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
-          icon: Icon(_obscurePassword ? Icons.visibility : Icons.visibility_off),
+          icon: Icon(
+            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+          ),
           onPressed: () {
             setState(() {
               _obscurePassword = !_obscurePassword;
@@ -217,7 +218,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
 
   Widget _buildDSGVOConsent() {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -229,10 +230,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
         children: [
           Row(
             children: [
-              Icon(
-                Icons.privacy_tip,
-                color: theme.colorScheme.primary,
-              ),
+              Icon(Icons.privacy_tip, color: theme.colorScheme.primary),
               const SizedBox(width: 8),
               Text(
                 'DSGVO-Einwilligung',
@@ -243,13 +241,13 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           Text(
             'Bitte wählen Sie, welche Datenverarbeitungen Sie erlauben möchten:',
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 16),
-          
+
           // Pflicht-Consent
           _buildConsentCheckbox(
             value: _allowReportSubmission,
@@ -258,7 +256,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
             required: true,
             onChanged: null, // Nicht änderbar
           ),
-          
+
           // Optional Consents
           _buildConsentCheckbox(
             value: _consentToDataProcessing,
@@ -271,7 +269,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
               });
             },
           ),
-          
+
           _buildConsentCheckbox(
             value: _consentToLocationProcessing,
             title: 'GPS-Standortverarbeitung',
@@ -283,7 +281,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
               });
             },
           ),
-          
+
           _buildConsentCheckbox(
             value: _consentToPhotoProcessing,
             title: 'Foto-Verarbeitung',
@@ -295,16 +293,13 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
               });
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Data Retention Period
-          Text(
-            'Datenspeicherungsdauer:',
-            style: theme.textTheme.titleSmall,
-          ),
+          Text('Datenspeicherungsdauer:', style: theme.textTheme.titleSmall),
           const SizedBox(height: 8),
-          
+
           DropdownButtonFormField<DataRetentionPeriod>(
             value: _dataRetentionPeriod,
             decoration: const InputDecoration(
@@ -325,13 +320,13 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
               }
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           Text(
             'Sie können diese Einstellungen jederzeit in den App-Einstellungen ändern.',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.alphaFrac(0.7),
             ),
           ),
         ],
@@ -347,16 +342,13 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
     ValueChanged<bool?>? onChanged,
   }) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Checkbox(
-            value: value,
-            onChanged: required ? null : onChanged,
-          ),
+          Checkbox(value: value, onChanged: required ? null : onChanged),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +370,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
                 Text(
                   subtitle,
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                    color: theme.colorScheme.onSurface.alphaFrac(0.7),
                   ),
                 ),
               ],
@@ -427,11 +419,13 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    
+
     if (!_isSignIn && !_consentToDataProcessing) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Für die Registrierung ist die Einwilligung zur Datenverarbeitung erforderlich'),
+          content: Text(
+            'Für die Registrierung ist die Einwilligung zur Datenverarbeitung erforderlich',
+          ),
           backgroundColor: Colors.orange,
         ),
       );
@@ -444,13 +438,13 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      
+
       if (_isSignIn) {
         final user = await authService.signInWithEmail(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
-        
+
         if (user != null) {
           ref.invalidate(currentUserProvider);
           if (mounted) {
@@ -460,7 +454,9 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                content: Text('Anmeldung fehlgeschlagen. Prüfen Sie Ihre Eingaben.'),
+                content: Text(
+                  'Anmeldung fehlgeschlagen. Prüfen Sie Ihre Eingaben.',
+                ),
                 backgroundColor: Colors.red,
               ),
             );
@@ -476,19 +472,19 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
           dataRetentionPeriod: _dataRetentionPeriod,
           consentGivenAt: DateTime.now(),
         );
-        
+
         final user = await authService.registerWithEmail(
           email: _emailController.text.trim(),
           password: _passwordController.text,
-          displayName: _displayNameController.text.trim().isEmpty 
-            ? null 
-            : _displayNameController.text.trim(),
-          phone: _phoneController.text.trim().isEmpty 
-            ? null 
-            : _phoneController.text.trim(),
+          displayName: _displayNameController.text.trim().isEmpty
+              ? null
+              : _displayNameController.text.trim(),
+          phone: _phoneController.text.trim().isEmpty
+              ? null
+              : _phoneController.text.trim(),
           privacySettings: privacySettings,
         );
-        
+
         if (user != null) {
           ref.invalidate(currentUserProvider);
           if (mounted) {
@@ -514,10 +510,7 @@ class _EmailAuthPageState extends ConsumerState<EmailAuthPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Fehler: $e'),
-            backgroundColor: Colors.red,
-          ),
+          SnackBar(content: Text('Fehler: $e'), backgroundColor: Colors.red),
         );
       }
     } finally {

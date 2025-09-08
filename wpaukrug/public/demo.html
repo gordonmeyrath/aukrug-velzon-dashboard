@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo: Öffentliche Meldungsansicht - Gemeinde Aukrug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .breadcrumb {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-section h2 {
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .report-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .report-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .report-title {
+            color: #1e40af;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .status,
+        .category {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-open {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-in_progress {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-resolved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-closed {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .category {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .report-content {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .report-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+            font-size: 0.9rem;
+        }
+
+        .address {
+            color: #9ca3af;
+        }
+
+        .date {
+            color: #9ca3af;
+        }
+
+        .comment {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .admin-comment {
+            border-left: 4px solid #3b82f6;
+            background: #f0f9ff;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .author {
+            font-weight: 600;
+        }
+
+        .role {
+            color: #6b7280;
+        }
+
+        .comment-time {
+            color: #9ca3af;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .step {
+            text-align: center;
+            background: white;
+            z-index: 2;
+            position: relative;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 auto 8px;
+        }
+
+        .step.active .step-number {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .form-section {
+            background: #f8fafc;
+            border: 1px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 800px;
+            margin: 5% auto;
+            border-radius: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>🏛️ Gemeinde Aukrug - Bürgermeldungen Demo</h1>
+            <p>Demonstration der öffentlichen Meldungsplattform</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="#overview">Übersicht</a> ›
+            <a href="#reports">Meldungen</a> ›
+            <a href="#details">Details</a>
+        </div>
+
+        <!-- Statistiken -->
+        <div class="demo-section">
+            <h2>📊 Aktuelle Statistiken</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">142</div>
+                    <div class="stat-label">Eingegangene Meldungen</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">98</div>
+                    <div class="stat-label">Bearbeitete Fälle</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">In Bearbeitung</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.1</div>
+                    <div class="stat-label">Ø Bearbeitungszeit (Tage)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Meldungsübersicht -->
+        <div class="demo-section">
+            <h2>📋 Aktuelle Meldungen</h2>
+
+            <div class="report-card" onclick="openReportDetail('001')">
+                <div class="report-header">
+                    <div>
+                        <div class="report-title">#001: Schlagloch in der Hauptstraße</div>
+                        <div class="report-meta">
+                            <span class="status status-in_progress">In Bearbeitung</span>
+                            <span class="category">Straße & Verkehr</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-content">
+                    Großes Schlagloch vor dem Bäcker Meier. Besonders bei Regen gefährlich für Radfahrer und Fußgänger.
+                </div>
+                <div class="report-footer">
+                    <span class="address">📍 Hauptstraße 15, Aukrug</span>
+                    <span class="date">12.12.2024</span>
+                </div>
+            </div>
+
+            <div class="report-card" onclick="openReportDetail('002')">
+                <div class="report-header">
+                    <div>
+                        <div class="report-title">#002: Defekte Straßenlaterne</div>
+                        <div class="report-meta">
+                            <span class="status status-resolved">Gelöst</span>
+                            <span class="category">Beleuchtung</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-content">
+                    Die Straßenlaterne am Spielplatz funktioniert seit einer Woche nicht mehr. Abends ist der Bereich
+                    sehr dunkel.
+                </div>
+                <div class="report-footer">
+                    <span class="address">📍 Am Spielplatz 3, Aukrug</span>
+                    <span class="date">10.12.2024</span>
+                </div>
+            </div>
+
+            <div class="report-card" onclick="openReportDetail('003')">
+                <div class="report-header">
+                    <div>
+                        <div class="report-title">#003: Überfüllter Mülleimer</div>
+                        <div class="report-meta">
+                            <span class="status status-open">Eingegangen</span>
+                            <span class="category">Abfall & Entsorgung</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="report-content">
+                    Der öffentliche Mülleimer am Marktplatz ist seit Tagen überfüllt. Müll liegt bereits daneben.
+                </div>
+                <div class="report-footer">
+                    <span class="address">📍 Marktplatz, Aukrug</span>
+                    <span class="date">13.12.2024</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neue Meldung -->
+        <div class="demo-section">
+            <h2>✍️ Neue Meldung erstellen</h2>
+            <div class="form-section">
+                <p><strong>Hier würde das Meldeformular angezeigt</strong></p>
+                <p>Bürger können schnell und einfach neue Probleme melden.</p>
+                <button class="btn" onclick="alert('Demo: Meldeformular würde hier geöffnet')">
+                    Neue Meldung erstellen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal für Meldungsdetails -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Meldungsdetails</h2>
+                <button class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Inhalt wird dynamisch geladen -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const reportDetails = {
+            '001': {
+                title: '#001: Schlagloch in der Hauptstraße',
+                status: 'in_progress',
+                category: 'Straße & Verkehr',
+                address: 'Hauptstraße 15, Aukrug',
+                date: '12.12.2024',
+                description: 'Großes Schlagloch vor dem Bäcker Meier. Besonders bei Regen gefährlich für Radfahrer und Fußgänger. Das Loch ist etwa 30cm breit und 10cm tief.',
+                comments: [
+                    {
+                        author: 'Maria Schmidt',
+                        role: 'Bürgerin',
+                        time: '12.12.2024 14:30',
+                        message: 'Vielen Dank für die Meldung. Wir prüfen das Problem.',
+                        isAdmin: false
+                    },
+                    {
+                        author: 'Thomas Weber',
+                        role: 'Gemeindeverwaltung',
+                        time: '13.12.2024 09:15',
+                        message: 'Wir haben das Schlagloch begutachtet und die Reparatur für nächste Woche eingeplant.',
+                        isAdmin: true
+                    }
+                ]
+            },
+            '002': {
+                title: '#002: Defekte Straßenlaterne',
+                status: 'resolved',
+                category: 'Beleuchtung',
+                address: 'Am Spielplatz 3, Aukrug',
+                date: '10.12.2024',
+                description: 'Die Straßenlaterne am Spielplatz funktioniert seit einer Woche nicht mehr. Abends ist der Bereich sehr dunkel.',
+                comments: [
+                    {
+                        author: 'Jürgen Müller',
+                        role: 'Gemeindeverwaltung',
+                        time: '11.12.2024 10:20',
+                        message: 'Elektriker wurde beauftragt. Reparatur erfolgt am 12.12.2024.',
+                        isAdmin: true
+                    },
+                    {
+                        author: 'Jürgen Müller',
+                        role: 'Gemeindeverwaltung',
+                        time: '12.12.2024 16:45',
+                        message: 'Straßenlaterne wurde repariert und funktioniert wieder einwandfrei.',
+                        isAdmin: true
+                    }
+                ]
+            },
+            '003': {
+                title: '#003: Überfüllter Mülleimer',
+                status: 'open',
+                category: 'Abfall & Entsorgung',
+                address: 'Marktplatz, Aukrug',
+                date: '13.12.2024',
+                description: 'Der öffentliche Mülleimer am Marktplatz ist seit Tagen überfüllt. Müll liegt bereits daneben.',
+                comments: []
+            }
+        };
+
+        function openReportDetail(reportId) {
+            const report = reportDetails[reportId];
+            if (!report) return;
+
+            document.getElementById('modalTitle').textContent = report.title;
+
+            const statusLabels = {
+                'open': 'Eingegangen',
+                'in_progress': 'In Bearbeitung',
+                'resolved': 'Gelöst',
+                'closed': 'Abgeschlossen'
+            };
+
+            let progressSteps = `
+                <div class="progress-steps">
+                    <div class="step ${report.status === 'open' ? 'active' : (report.status !== 'open' ? 'completed' : '')}">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Eingegangen</div>
+                    </div>
+                    <div class="step ${report.status === 'in_progress' ? 'active' : (['resolved', 'closed'].includes(report.status) ? 'completed' : '')}">
+                        <div class="step-number">2</div>
+                        <div class="step-label">In Bearbeitung</div>
+                    </div>
+                    <div class="step ${report.status === 'resolved' ? 'active' : (report.status === 'closed' ? 'completed' : '')}">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Gelöst</div>
+                    </div>
+                    <div class="step ${report.status === 'closed' ? 'active' : ''}">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Abgeschlossen</div>
+                    </div>
+                </div>
+            `;
+
+            let commentsHtml = '';
+            if (report.comments.length > 0) {
+                commentsHtml = '<h3>Verlauf & Kommunikation</h3>';
+                report.comments.forEach(comment => {
+                    commentsHtml += `
+                        <div class="comment ${comment.isAdmin ? 'admin-comment' : ''}">
+                            <div class="comment-header">
+                                <span class="author">${comment.author}</span>
+                                <span class="role">(${comment.role})</span>
+                                <span class="comment-time">${comment.time}</span>
+                            </div>
+                            <div>${comment.message}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            const modalContent = `
+                <div style="margin-bottom: 1.5rem;">
+                    <div class="report-meta" style="margin-bottom: 1rem;">
+                        <span class="status status-${report.status}">${statusLabels[report.status]}</span>
+                        <span class="category">${report.category}</span>
+                    </div>
+                    <p><strong>📍 ${report.address}</strong></p>
+                    <p style="color: #6b7280; margin-top: 0.5rem;">Gemeldet am ${report.date}</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Beschreibung</h3>
+                    <p style="color: #6b7280; line-height: 1.6;">${report.description}</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3>Bearbeitungsstatus</h3>
+                    ${progressSteps}
+                </div>
+
+                ${commentsHtml}
+
+                ${['open', 'in_progress'].includes(report.status) ? `
+                    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
+                        <h3>Rückfrage hinzufügen</h3>
+                        <div class="form-section">
+                            <p>Hier könnten Bürger zusätzliche Informationen oder Rückfragen hinzufügen.</p>
+                            <button class="btn" onclick="alert('Demo: Kommentar-Formular würde hier geöffnet')">
+                                Nachricht senden
+                            </button>
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+
+            document.getElementById('modalBody').innerHTML = modalContent;
+            document.getElementById('reportModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('reportModal').style.display = 'none';
+        }
+
+        // Modal schließen bei Klick außerhalb
+        window.onclick = function (event) {
+            const modal = document.getElementById('reportModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // ESC-Taste zum Schließen
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

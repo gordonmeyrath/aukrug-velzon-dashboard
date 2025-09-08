@@ -133,7 +133,7 @@ class AuthService {
       if (userJson == null) return null;
 
       final user = User.fromJson(jsonDecode(userJson));
-      
+
       // Session-Validierung
       final isSessionValid = await _isSessionValid(user.id);
       if (!isSessionValid) {
@@ -205,7 +205,7 @@ class AuthService {
 
       // Export-Request loggen für DSGVO-Compliance
       await _logPrivacyEvent('data_export_requested', userId);
-      
+
       // Update des letzten Export-Datums
       final updatedPrivacySettings = user.privacySettings.copyWith(
         lastDataExportRequest: DateTime.now(),
@@ -223,7 +223,10 @@ class AuthService {
   }
 
   /// DSGVO-konforme Datenlöschung (Artikel 17 - "Recht auf Vergessenwerden")
-  Future<bool> deleteUserData(String userId, {bool fullDeletion = false}) async {
+  Future<bool> deleteUserData(
+    String userId, {
+    bool fullDeletion = false,
+  }) async {
     try {
       final user = await getCurrentUser();
       if (user == null || user.id != userId) return false;
@@ -255,7 +258,8 @@ class AuthService {
     }
 
     // Wenn Location-Processing gewünscht, muss Consent gegeben werden
-    if (settings.allowLocationTracking && !settings.consentToLocationProcessing) {
+    if (settings.allowLocationTracking &&
+        !settings.consentToLocationProcessing) {
       return false;
     }
 
@@ -296,10 +300,10 @@ class AuthService {
 
     final hash = parts[0];
     final salt = parts[1];
-    
+
     final bytes = utf8.encode(password + salt);
     final digest = sha256.convert(bytes);
-    
+
     return hash == digest.toString();
   }
 
@@ -350,10 +354,10 @@ class AuthService {
       if (sessionJson == null) return false;
 
       final session = UserSession.fromJson(jsonDecode(sessionJson));
-      
-      return session.userId == userId && 
-             session.isActive && 
-             session.expiresAt.isAfter(DateTime.now());
+
+      return session.userId == userId &&
+          session.isActive &&
+          session.expiresAt.isAfter(DateTime.now());
     } catch (e) {
       return false;
     }
@@ -374,8 +378,13 @@ class AuthService {
   /// Data Retention Schedule
   Future<void> _scheduleDataRetention(User user) async {
     final prefs = await SharedPreferences.getInstance();
-    final retentionDate = DateTime.now().add(user.privacySettings.dataRetentionPeriod.duration);
-    await prefs.setString('${_dataRetentionKey}_${user.id}', retentionDate.toIso8601String());
+    final retentionDate = DateTime.now().add(
+      user.privacySettings.dataRetentionPeriod.duration,
+    );
+    await prefs.setString(
+      '${_dataRetentionKey}_${user.id}',
+      retentionDate.toIso8601String(),
+    );
   }
 
   /// User Reports abrufen (Placeholder)
@@ -410,7 +419,7 @@ class AuthService {
     );
 
     await _storeUserLocally(anonymizedUser);
-    
+
     // Password-Hash löschen
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('pwd_$userId');
@@ -431,10 +440,10 @@ final currentUserProvider = FutureProvider<User?>((ref) async {
 /// Provider für Authentication-Status
 final authStateProvider = StreamProvider<User?>((ref) async* {
   final authService = ref.read(authServiceProvider);
-  
+
   // Initial state
   yield await authService.getCurrentUser();
-  
+
   // Hier könnte ein Stream für Real-time Updates implementiert werden
   // Für lokale Auth reicht der FutureProvider meist aus
 });
@@ -443,18 +452,18 @@ final authStateProvider = StreamProvider<User?>((ref) async* {
 final privacyComplianceProvider = FutureProvider<bool>((ref) async {
   final user = await ref.watch(currentUserProvider.future);
   if (user == null) return true; // Anonyme Nutzung ist compliant
-  
+
   final settings = user.privacySettings;
-  
+
   // Prüfung der DSGVO-Compliance
   if (settings.consentGivenAt == null && !user.isAnonymous) {
     return false; // Consent erforderlich für nicht-anonyme Nutzer
   }
-  
+
   // Prüfung der Data Retention
   if (settings.dataRetentionPeriod == DataRetentionPeriod.custom) {
     // Hier würde geprüft werden, ob custom period gültig ist
   }
-  
+
   return true;
 });

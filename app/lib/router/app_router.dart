@@ -2,26 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../core/config/feature_flags.dart';
 import '../features/auth/presentation/consent_page.dart';
-import '../features/auth/presentation/welcome_page.dart';
 import '../features/auth/presentation/email_auth_page.dart';
 import '../features/auth/presentation/privacy_settings_page.dart';
+import '../features/auth/presentation/welcome_page.dart';
+import '../features/documents/presentation/downloads_center_page.dart';
 import '../features/events/presentation/events_list_page.dart';
+import '../features/home/presentation/home_page.dart';
 import '../features/map/presentation/pages/reports_map_page.dart';
 import '../features/notices/presentation/notices_list_page.dart';
 import '../features/places/presentation/places_list_page.dart';
+import '../features/reports/presentation/demo_reports_list_page.dart';
 import '../features/reports/presentation/report_issue_page.dart';
-import '../features/reports/presentation/reports_list_page.dart';
+import '../features/reports/presentation/reports_unified_page.dart';
+import '../features/resident/presentation/settings_page.dart';
 import '../features/shell/presentation/audience_picker_page.dart';
-import '../features/shell/presentation/resident_shell.dart';
-import '../features/shell/presentation/tourist_shell.dart';
+import '../features/tourist/presentation/discover_page.dart';
+import '../features/tourist/presentation/info_page.dart';
+import '../features/tourist/presentation/routes_page.dart';
+import '../shared/widgets/app_shell.dart';
+
+// Community guards temporarily disabled
+// import 'guards/community_guard.dart';
 
 part 'app_router.g.dart';
 
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {
+  // Ensure feature flags loaded early (fire & forget)
+  featureFlags.init();
   return GoRouter(
-    initialLocation: '/welcome',
+    initialLocation: '/splash',
+    redirect: (context, state) async {
+      // Community redirects are now enabled with FEATURE_FEED
+      return null;
+    },
     routes: [
       // Splash / Audience Picker
       GoRoute(
@@ -33,6 +49,13 @@ GoRouter appRouter(AppRouterRef ref) {
       GoRoute(
         path: '/welcome',
         builder: (context, state) => const WelcomePage(),
+      ),
+
+      // Hauptmenü/Homepage - auch mit AppShell
+      GoRoute(
+        path: '/home',
+        builder: (context, state) =>
+            const AppShell(showBottomNav: false, child: HomePage()),
       ),
 
       // Authentication Routes
@@ -53,9 +76,16 @@ GoRouter appRouter(AppRouterRef ref) {
         builder: (context, state) => const PrivacySettingsPage(),
       ),
 
+      // Demo Reports (für Simulator Testing)
+      GoRoute(
+        path: '/reports',
+        builder: (context, state) => const DemoReportsListPage(),
+      ),
+
       // Tourist Shell
       ShellRoute(
-        builder: (context, state, child) => TouristShell(child: child),
+        builder: (context, state, child) =>
+            AppShell(type: AppShellType.tourist, child: child),
         routes: [
           GoRoute(
             path: '/tourist/discover',
@@ -82,7 +112,8 @@ GoRouter appRouter(AppRouterRef ref) {
 
       // Resident Shell
       ShellRoute(
-        builder: (context, state, child) => ResidentShell(child: child),
+        builder: (context, state, child) =>
+            AppShell(type: AppShellType.resident, child: child),
         routes: [
           GoRoute(
             path: '/resident/notices',
@@ -94,11 +125,11 @@ GoRouter appRouter(AppRouterRef ref) {
           ),
           GoRoute(
             path: '/resident/downloads',
-            builder: (context, state) => const DownloadsPage(),
+            builder: (context, state) => const DownloadsCenterPage(),
           ),
           GoRoute(
             path: '/resident/reports',
-            builder: (context, state) => const ReportsListPage(),
+            builder: (context, state) => const ReportsUnifiedPage(),
           ),
           GoRoute(
             path: '/resident/reports/map',
@@ -114,24 +145,26 @@ GoRouter appRouter(AppRouterRef ref) {
           ),
         ],
       ),
+
+      // Community Shell (accessible at root level for deep links)
+      ShellRoute(
+        builder: (context, state, child) =>
+            AppShell(type: AppShellType.community, child: child),
+        routes: [
+          GoRoute(
+            path: '/community',
+            builder: (context, state) => const Scaffold(
+              body: Center(child: Text('Community-Features werden entwickelt')),
+            ),
+          ),
+        ],
+      ),
     ],
   );
 }
 
 // Placeholder pages - will be implemented in their respective features
-class DiscoverPage extends StatelessWidget {
-  const DiscoverPage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Discover')));
-}
-
-class RoutesPage extends StatelessWidget {
-  const RoutesPage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Routes')));
-}
+// DiscoverPage, RoutesPage and InfoPage now implemented in features/tourist/presentation/
 
 class EventsPage extends StatelessWidget {
   const EventsPage({super.key});
@@ -147,19 +180,9 @@ class PlacesPage extends StatelessWidget {
       const Scaffold(body: Center(child: Text('Places')));
 }
 
-class InfoPage extends StatelessWidget {
-  const InfoPage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Info')));
-}
-
-class NoticesPage extends StatelessWidget {
-  const NoticesPage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Notices')));
-}
+// InfoPage now implemented in features/tourist/presentation/info_page.dart
+// NoticesPage now implemented in features/resident/presentation/notices_page.dart
+// SettingsPage now implemented in features/resident/presentation/settings_page.dart
 
 class ResidentEventsPage extends StatelessWidget {
   const ResidentEventsPage({super.key});
@@ -180,11 +203,4 @@ class ReportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
       const Scaffold(body: Center(child: Text('Report')));
-}
-
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: Text('Settings')));
 }

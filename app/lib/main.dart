@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/theme/app_theme.dart';
+import 'core/theme/theme_mode_controller.dart';
 import 'localization/app_localizations.dart';
 import 'router/app_router.dart';
+
+// ThemeMode Provider ausgelagert in core/theme/theme_mode_controller.dart
 
 void main() {
   runApp(const ProviderScope(child: AukrugApp()));
@@ -16,9 +20,10 @@ class AukrugApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
+    final themeMode = ref.watch(themeModeProvider);
     return MaterialApp.router(
       title: 'Aukrug',
-      
+
       // Localization configuration
       localizationsDelegates: const [
         AppLocalizations.delegate,
@@ -30,18 +35,15 @@ class AukrugApp extends ConsumerWidget {
         Locale('de'), // German
         Locale('en'), // English
       ],
-      
+
       // Theme configuration
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2E7D32), // Forest green representing nature
-        ),
-      ),
-      
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: themeMode,
+
       // Router configuration
       routerConfig: router,
-      
+
       // Debug settings
       debugShowCheckedModeBanner: false,
     );

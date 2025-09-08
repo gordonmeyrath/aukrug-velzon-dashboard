@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bürgermeldungen - Gemeinde Aukrug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #1e40af;
+        }
+
+        .btn-primary:hover {
+            background: #f8fafc;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+        }
+
+        .feature p {
+            color: #6b7280;
+        }
+
+        .stats {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #1e40af;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #3b82f6;
+            display: block;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .categories {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .categories h2 {
+            margin-bottom: 2rem;
+            color: #1e40af;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .category {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .category:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .footer {
+            background: #374151;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer p {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="hero">
+                <h1>Bürgermeldungen Aukrug</h1>
+                <p>Melden Sie Probleme in Ihrer Gemeinde schnell und unkompliziert. Wir kümmern uns darum!</p>
+                <div class="hero-actions">
+                    <a href="#new-report" class="btn btn-primary">Neue Meldung erstellen</a>
+                    <a href="#view-reports" class="btn btn-secondary">Meldungen anzeigen</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📝</div>
+                <h3>Einfach melden</h3>
+                <p>Beschreiben Sie das Problem in wenigen Schritten und senden Sie Ihre Meldung direkt an die
+                    Gemeindeverwaltung.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">👁️</div>
+                <h3>Transparent verfolgen</h3>
+                <p>Verfolgen Sie den Bearbeitungsstatus Ihrer Meldung und erhalten Sie Updates per E-Mail.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💬</div>
+                <h3>Direkt kommunizieren</h3>
+                <p>Stellen Sie Rückfragen und erhalten Sie Antworten direkt von der zuständigen Stelle.</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h2>Unsere Erfolge im Überblick</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">127</span>
+                    <div class="stat-label">Eingegangene Meldungen</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">89</span>
+                    <div class="stat-label">Bereits gelöst</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15</span>
+                    <div class="stat-label">In Bearbeitung</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2.3</span>
+                    <div class="stat-label">Ø Bearbeitungszeit (Tage)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="categories">
+            <h2>Was können Sie melden?</h2>
+            <div class="category-grid">
+                <div class="category">
+                    <div class="category-icon">🛣️</div>
+                    <div>
+                        <strong>Straße & Verkehr</strong><br>
+                        <small>Schlaglöcher, defekte Schilder, Markierungen</small>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">💡</div>
+                    <div>
+                        <strong>Beleuchtung</strong><br>
+                        <small>Defekte Straßenlaternen, dunkle Bereiche</small>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">🗑️</div>
+                    <div>
+                        <strong>Abfall & Entsorgung</strong><br>
+                        <small>Wilde Müllablagerung, volle Container</small>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">🌳</div>
+                    <div>
+                        <strong>Grünflächen & Parks</strong><br>
+                        <small>Pflege von Parks, umgestürzte Bäume</small>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">🚰</div>
+                    <div>
+                        <strong>Wasser & Abwasser</strong><br>
+                        <small>Wasserrohrbrüche, verstopfte Gullys</small>
+                    </div>
+                </div>
+                <div class="category">
+                    <div class="category-icon">🏗️</div>
+                    <div>
+                        <strong>Vandalismus</strong><br>
+                        <small>Sachschäden an öffentlichem Eigentum</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="new-report"
+            style="background: white; padding: 2rem; border-radius: 12px; margin: 3rem 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #1e40af; margin-bottom: 1rem;">Neue Meldung erstellen</h2>
+
+            <!-- Hier würde das Formular aus dem Shortcode eingefügt -->
+            <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 8px;">
+                <p style="margin-bottom: 1rem;">Das Meldeformular wird hier eingebunden.</p>
+                <p style="font-size: 0.9rem; color: #6b7280;">
+                    Shortcode: <code>[aukrug_report_form]</code>
+                </p>
+            </div>
+        </div>
+
+        <div id="view-reports"
+            style="background: white; padding: 2rem; border-radius: 12px; margin: 3rem 0; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            <h2 style="color: #1e40af; margin-bottom: 1rem;">Aktuelle Meldungen</h2>
+
+            <!-- Hier würde die Meldungsliste aus dem Shortcode eingefügt -->
+            <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 8px;">
+                <p style="margin-bottom: 1rem;">Die Liste der aktuellen Meldungen wird hier angezeigt.</p>
+                <p style="font-size: 0.9rem; color: #6b7280;">
+                    Shortcode: <code>[aukrug_reports_list]</code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2024 Gemeinde Aukrug. Alle Rechte vorbehalten.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">
+                Diese Plattform ermöglicht es Bürgern, Anliegen direkt an die Gemeindeverwaltung zu melden.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

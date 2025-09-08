@@ -24,6 +24,7 @@ class Report with _$Report {
     String? municipalityResponse,
     DateTime? responseAt,
     String? referenceNumber,
+    @Default(1) int version, // Server Version für Konfliktauflösung
   }) = _Report;
 
   factory Report.fromJson(Map<String, dynamic> json) => _$ReportFromJson(json);

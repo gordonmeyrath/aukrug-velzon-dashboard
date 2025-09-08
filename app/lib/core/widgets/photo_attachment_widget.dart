@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/color_extensions.dart';
 import '../services/camera_service.dart';
 
 /// Widget for displaying and managing photo attachments in reports
@@ -137,7 +138,7 @@ class _PhotoItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+            color: Theme.of(context).colorScheme.outline.alphaFrac(0.2),
           ),
         ),
         child: Stack(
@@ -176,7 +177,7 @@ class _PhotoItem extends StatelessWidget {
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
+                          color: Colors.black.alphaFrac(0.2),
                           blurRadius: 4,
                         ),
                       ],
@@ -211,7 +212,7 @@ class _AddPhotoButton extends StatelessWidget {
         height: 64,
         decoration: BoxDecoration(
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.outline.alphaFrac(0.5),
             style: BorderStyle.solid,
           ),
           borderRadius: BorderRadius.circular(8),

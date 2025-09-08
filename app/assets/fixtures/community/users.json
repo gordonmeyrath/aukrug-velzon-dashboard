@@ -1,0 +1,47 @@
+[
+    {
+        "id": "u1",
+        "name": "Anna Müller",
+        "avatar": null,
+        "bio": "Bürgerin von Aukrug",
+        "followersCount": 12,
+        "followingCount": 20,
+        "joinedAt": "2024-01-12T10:00:00Z"
+    },
+    {
+        "id": "u2",
+        "name": "Max Schmidt",
+        "avatar": null,
+        "bio": "Fotograf & Radfahrer",
+        "followersCount": 8,
+        "followingCount": 15,
+        "joinedAt": "2024-02-20T12:00:00Z"
+    },
+    {
+        "id": "u3",
+        "name": "Lisa Becker",
+        "avatar": null,
+        "bio": "Verwaltung",
+        "followersCount": 30,
+        "followingCount": 5,
+        "joinedAt": "2023-11-05T09:30:00Z"
+    },
+    {
+        "id": "u4",
+        "name": "Tom Wagner",
+        "avatar": null,
+        "bio": "Entwickler",
+        "followersCount": 5,
+        "followingCount": 9,
+        "joinedAt": "2024-04-01T08:00:00Z"
+    },
+    {
+        "id": "u5",
+        "name": "Sarah Klein",
+        "avatar": null,
+        "bio": "Naturfreundin",
+        "followersCount": 18,
+        "followingCount": 22,
+        "joinedAt": "2024-03-14T15:45:00Z"
+    }
+]

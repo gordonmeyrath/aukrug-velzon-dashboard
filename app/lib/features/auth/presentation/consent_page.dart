@@ -127,12 +127,8 @@ class _ConsentPageState extends State<ConsentPage> {
 
     if (!mounted) return;
 
-    // Navigate to appropriate shell
-    if (audience == 'tourist') {
-      context.go('/tourist/discover');
-    } else {
-      context.go('/resident/notices');
-    }
+    // Navigate to main home page where users can choose their functions
+    context.go('/home');
   }
 }
 

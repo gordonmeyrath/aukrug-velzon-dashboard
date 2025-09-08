@@ -37,6 +37,7 @@ mixin _$Report {
   String? get municipalityResponse => throw _privateConstructorUsedError;
   DateTime? get responseAt => throw _privateConstructorUsedError;
   String? get referenceNumber => throw _privateConstructorUsedError;
+  int get version => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -65,7 +66,8 @@ abstract class $ReportCopyWith<$Res> {
       DateTime? updatedAt,
       String? municipalityResponse,
       DateTime? responseAt,
-      String? referenceNumber});
+      String? referenceNumber,
+      int version});
 
   $ReportLocationCopyWith<$Res> get location;
 }
@@ -100,6 +102,7 @@ class _$ReportCopyWithImpl<$Res, $Val extends Report>
     Object? municipalityResponse = freezed,
     Object? responseAt = freezed,
     Object? referenceNumber = freezed,
+    Object? version = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -170,6 +173,10 @@ class _$ReportCopyWithImpl<$Res, $Val extends Report>
           ? _value.referenceNumber
           : referenceNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 
@@ -206,7 +213,8 @@ abstract class _$$ReportImplCopyWith<$Res> implements $ReportCopyWith<$Res> {
       DateTime? updatedAt,
       String? municipalityResponse,
       DateTime? responseAt,
-      String? referenceNumber});
+      String? referenceNumber,
+      int version});
 
   @override
   $ReportLocationCopyWith<$Res> get location;
@@ -240,6 +248,7 @@ class __$$ReportImplCopyWithImpl<$Res>
     Object? municipalityResponse = freezed,
     Object? responseAt = freezed,
     Object? referenceNumber = freezed,
+    Object? version = null,
   }) {
     return _then(_$ReportImpl(
       id: null == id
@@ -310,6 +319,10 @@ class __$$ReportImplCopyWithImpl<$Res>
           ? _value.referenceNumber
           : referenceNumber // ignore: cast_nullable_to_non_nullable
               as String?,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -334,7 +347,8 @@ class _$ReportImpl implements _Report {
       this.updatedAt,
       this.municipalityResponse,
       this.responseAt,
-      this.referenceNumber})
+      this.referenceNumber,
+      this.version = 1})
       : _imageUrls = imageUrls;
 
   factory _$ReportImpl.fromJson(Map<String, dynamic> json) =>
@@ -383,10 +397,13 @@ class _$ReportImpl implements _Report {
   final DateTime? responseAt;
   @override
   final String? referenceNumber;
+  @override
+  @JsonKey()
+  final int version;
 
   @override
   String toString() {
-    return 'Report(id: $id, title: $title, description: $description, category: $category, priority: $priority, status: $status, location: $location, imageUrls: $imageUrls, contactName: $contactName, contactEmail: $contactEmail, contactPhone: $contactPhone, isAnonymous: $isAnonymous, submittedAt: $submittedAt, updatedAt: $updatedAt, municipalityResponse: $municipalityResponse, responseAt: $responseAt, referenceNumber: $referenceNumber)';
+    return 'Report(id: $id, title: $title, description: $description, category: $category, priority: $priority, status: $status, location: $location, imageUrls: $imageUrls, contactName: $contactName, contactEmail: $contactEmail, contactPhone: $contactPhone, isAnonymous: $isAnonymous, submittedAt: $submittedAt, updatedAt: $updatedAt, municipalityResponse: $municipalityResponse, responseAt: $responseAt, referenceNumber: $referenceNumber, version: $version)';
   }
 
   @override
@@ -424,7 +441,8 @@ class _$ReportImpl implements _Report {
             (identical(other.responseAt, responseAt) ||
                 other.responseAt == responseAt) &&
             (identical(other.referenceNumber, referenceNumber) ||
-                other.referenceNumber == referenceNumber));
+                other.referenceNumber == referenceNumber) &&
+            (identical(other.version, version) || other.version == version));
   }
 
   @JsonKey(ignore: true)
@@ -447,7 +465,8 @@ class _$ReportImpl implements _Report {
       updatedAt,
       municipalityResponse,
       responseAt,
-      referenceNumber);
+      referenceNumber,
+      version);
 
   @JsonKey(ignore: true)
   @override
@@ -481,7 +500,8 @@ abstract class _Report implements Report {
       final DateTime? updatedAt,
       final String? municipalityResponse,
       final DateTime? responseAt,
-      final String? referenceNumber}) = _$ReportImpl;
+      final String? referenceNumber,
+      final int version}) = _$ReportImpl;
 
   factory _Report.fromJson(Map<String, dynamic> json) = _$ReportImpl.fromJson;
 
@@ -519,6 +539,8 @@ abstract class _Report implements Report {
   DateTime? get responseAt;
   @override
   String? get referenceNumber;
+  @override
+  int get version;
   @override
   @JsonKey(ignore: true)
   _$$ReportImplCopyWith<_$ReportImpl> get copyWith =>

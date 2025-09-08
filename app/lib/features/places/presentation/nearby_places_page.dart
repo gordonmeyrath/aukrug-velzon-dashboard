@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/theme/color_extensions.dart';
 import '../providers/nearby_places_provider.dart';
 
 /// Page showing places near user's current location
@@ -35,7 +36,7 @@ class _NearbyPlacesPageState extends ConsumerState<NearbyPlacesPage> {
             padding: const EdgeInsets.all(16),
             color: Theme.of(
               context,
-            ).colorScheme.surfaceContainerHighest.withOpacity(0.3),
+            ).colorScheme.surfaceContainerHighest.alphaFrac(0.3),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

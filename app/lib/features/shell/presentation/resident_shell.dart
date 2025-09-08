@@ -19,6 +19,10 @@ class ResidentShell extends StatelessWidget {
         onTap: (index) => _onTabTapped(context, index),
         items: const [
           BottomNavigationBarItem(
+            icon: Icon(Icons.people_alt),
+            label: 'Community',
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Mitteilungen',
           ),
@@ -42,29 +46,33 @@ class ResidentShell extends StatelessWidget {
 
   int _getCurrentIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
-    if (location.contains('/notices')) return 0;
-    if (location.contains('/events')) return 1;
-    if (location.contains('/downloads')) return 2;
-    if (location.contains('/reports') || location.contains('/report')) return 3;
-    if (location.contains('/settings')) return 4;
-    return 0;
+    if (location.contains('/community')) return 0;
+    if (location.contains('/notices')) return 1;
+    if (location.contains('/events')) return 2;
+    if (location.contains('/downloads')) return 3;
+    if (location.contains('/reports') || location.contains('/report')) return 4;
+    if (location.contains('/settings')) return 5;
+    return 1;
   }
 
   void _onTabTapped(BuildContext context, int index) {
     switch (index) {
       case 0:
-        context.go('/resident/notices');
+        context.go('/community/feed');
         break;
       case 1:
-        context.go('/resident/events');
+        context.go('/resident/notices');
         break;
       case 2:
-        context.go('/resident/downloads');
+        context.go('/resident/events');
         break;
       case 3:
-        context.go('/resident/reports');
+        context.go('/resident/downloads');
         break;
       case 4:
+        context.go('/resident/reports');
+        break;
+      case 5:
         context.go('/resident/settings');
         break;
     }

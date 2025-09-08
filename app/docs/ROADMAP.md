@@ -65,6 +65,15 @@
 - [ ] **Mängelmelder**: Report infrastructure issues with photos/location
 - [ ] **Report Tracking**: Check status of submitted reports
 
+#### Community Feature (Offline-First) ✅ COMPLETED (v0.9.1)
+
+- [x] Offline-Cache (Isar) für Users/Groups/Posts/Messages, Cache-first-Reads
+- [x] Optimistische Updates für Posts/Messages
+- [x] Detailseiten: Gruppen & Chat inkl. Navigation
+- [x] Pull-to-Refresh (Feed/Groups/Messages) + Refresh-Provider
+- [x] Aktuelle User-ID statt Platzhalter in Composer/Chat
+- Siehe Milestone-Notiz: ../MILESTONE_COMMUNITY_OFFLINE_FIRST_v0.9.1.md
+
 ## Upcoming Phases 📅
 
 ### Phase 4: Polish & Testing (2 weeks)

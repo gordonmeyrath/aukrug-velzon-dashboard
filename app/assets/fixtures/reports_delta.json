@@ -1,0 +1,43 @@
+{
+    "reports": [
+        {
+            "id": 2,
+            "title": "Defekte Straßenlaterne (Update)",
+            "description": "Laterne repariert, Licht wieder funktionstüchtig.",
+            "category": "public_lighting",
+            "priority": "medium",
+            "status": "resolved",
+            "location": {
+                "latitude": 53.9901,
+                "longitude": 9.7632,
+                "address": "Kirchenweg 5, 24613 Aukrug",
+                "description": "Parkplatz hinter der St. Bartholomäus Kirche",
+                "landmark": "St. Bartholomäus Kirche"
+            },
+            "imageUrls": [
+                "https://example.com/images/laterne1_after.jpg"
+            ],
+            "submittedAt": "2025-08-25T18:45:00Z",
+            "updatedAt": "2025-09-06T07:30:00Z",
+            "referenceNumber": "AUK-20250825-002"
+        },
+        {
+            "id": 11,
+            "title": "Neuer illegaler Müllablageplatz",
+            "description": "Frisch abgeladene Bauschutt-Säcke am Parkplatz beim Wald.",
+            "category": "waste_management",
+            "priority": "high",
+            "status": "submitted",
+            "location": {
+                "latitude": 53.9830,
+                "longitude": 9.7580,
+                "address": "Parkplatz Waldweg, 24613 Aukrug",
+                "description": "Hinterer Bereich des Parkplatzes",
+                "landmark": "Wanderparkplatz Waldweg"
+            },
+            "submittedAt": "2025-09-06T08:00:00Z",
+            "updatedAt": "2025-09-06T08:00:00Z",
+            "referenceNumber": "AUK-20250906-011"
+        }
+    ]
+}

@@ -255,6 +255,33 @@ Check status of submitted report.
 }
 ```
 
+#### (Planned) GET /reports?since=ISO8601
+
+Incremental delta endpoint returning only reports created or updated after the provided timestamp plus optional deletions.
+
+Example (future shape):
+
+```json
+{
+  "reports": [ { "id": 2, "updatedAt": "2025-09-06T07:30:00Z", "status": "resolved", "title": "Defekte Straßenlaterne (Update)" } ],
+  "deleted_ids": [ 12, 18 ],
+  "meta": { "since": "2025-09-01T00:00:00Z", "generated_at": "2025-09-06T08:05:00Z" }
+}
+```
+
+Client Handling:
+
+1. Call with lastFullSyncAt.
+2. Merge by id (replace if newer updatedAt/submittedAt).
+3. Remove items whose id appears in deleted_ids.
+4. If empty response for prolonged period and local age > threshold -> trigger full sync.
+
+Current Implementation Note:
+
+- The app simulates this via local asset `assets/fixtures/reports_delta.json`. If present, entries with updatedAt/submittedAt > lastFullSyncAt are merged.
+- Deletions not yet simulated (no deleted_ids key processed).
+- Failure to load delta falls back silently to cache/full.
+
 ## Data Types
 
 ### Common Enums
@@ -397,6 +424,89 @@ Response:
 ```
 
 ## Testing Endpoints
+
+## Community (Mock)
+
+During prototyping, the Community module is fixture-backed. The following mock endpoints are represented by local assets and may be mapped to real REST endpoints later (e.g., via WordPress plugin or separate service).
+
+### GET /community/users (mock)
+
+Loads from `assets/fixtures/community/users.json`.
+
+Item shape:
+
+```json
+{
+  "id": "u1",
+  "name": "Anna Müller",
+  "avatar": null,
+  "bio": "Bürgerin von Aukrug",
+  "followersCount": 12,
+  "followingCount": 20,
+  "joinedAt": "2024-01-12T10:00:00Z"
+}
+```
+
+### GET /community/groups (mock)
+
+Loads from `assets/fixtures/community/groups.json`.
+
+Item shape:
+
+```json
+{
+  "id": "g1",
+  "title": "Aukrug Forum",
+  "description": "Allgemeine Diskussionen",
+  "membersCount": 120,
+  "isPublic": true
+}
+```
+
+### GET /community/posts (mock)
+
+Loads from `assets/fixtures/community/posts.json`.
+
+Item shape:
+
+```json
+{
+  "id": "p1",
+  "authorId": "u1",
+  "content": "Frühjahrsputz im Park – danke an alle Helfer!",
+  "mediaUrls": [],
+  "createdAt": "2025-09-03T10:00:00Z",
+  "likesCount": 12,
+  "commentsCount": 3
+}
+```
+
+### GET /community/messages (mock)
+
+Loads from `assets/fixtures/community/messages.json`.
+
+Item shape:
+
+```json
+{
+  "id": "m1",
+  "fromId": "u2",
+  "toId": "u1",
+  "text": "Hi Anna, kommst du morgen zum Treffen?",
+  "createdAt": "2025-09-03T12:00:00Z",
+  "read": false
+}
+```
+
+### Planned Real Endpoints
+
+- `GET /community/feed` → Aggregated posts
+- `POST /community/posts` → Create post (multipart for media)
+- `GET /community/messages/{conversationId}` → Chat thread
+- `POST /community/messages` → Send message
+- `GET /community/notifications` → User notifications
+
+Authentication will be required once user accounts are enabled (JWT or WP cookies), with appropriate rate limiting and privacy controls.
 
 ### Development Environment
 

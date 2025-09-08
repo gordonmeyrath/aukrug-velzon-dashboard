@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/theme/color_extensions.dart';
 import '../../domain/document.dart';
 
 class CategoryFilterChip extends StatelessWidget {
@@ -24,9 +25,9 @@ class CategoryFilterChip extends StatelessWidget {
       selected: isSelected,
       onSelected: onSelected,
       backgroundColor: isSelected
-          ? _getCategoryColor(category).withOpacity(0.1)
+          ? _getCategoryColor(category).alphaFrac(0.1)
           : null,
-      selectedColor: _getCategoryColor(category).withOpacity(0.2),
+      selectedColor: _getCategoryColor(category).alphaFrac(0.2),
       checkmarkColor: _getCategoryColor(category),
       side: isSelected ? BorderSide(color: _getCategoryColor(category)) : null,
     );

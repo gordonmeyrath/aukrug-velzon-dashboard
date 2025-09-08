@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../core/theme/color_extensions.dart';
 import '../../../events/domain/event.dart';
 import '../../../places/domain/place.dart';
 import '../../../reports/domain/report.dart';
+import '../../../reports/presentation/status_colors.dart';
 
 /// Factory for creating map markers for different types of content
 class MapMarkerFactory {
@@ -51,6 +53,7 @@ class MapMarkerFactory {
     Report report, {
     bool isSelected = false,
     VoidCallback? onTap,
+  DateTime? lastFullSyncAt,
   }) {
     return Marker(
       point: LatLng(report.location.latitude, report.location.longitude),
@@ -61,6 +64,7 @@ class MapMarkerFactory {
         report: report,
         isSelected: isSelected,
         onTap: onTap,
+    lastFullSyncAt: lastFullSyncAt,
       ),
     );
   }
@@ -119,7 +123,7 @@ class _PlaceMarker extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.alphaFrac(0.3),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -198,7 +202,7 @@ class _EventMarker extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.alphaFrac(0.3),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -258,57 +262,72 @@ class _ReportMarker extends StatelessWidget {
     required this.report,
     required this.isSelected,
     this.onTap,
+  this.lastFullSyncAt,
   });
 
   final Report report;
   final bool isSelected;
   final VoidCallback? onTap;
+  final DateTime? lastFullSyncAt;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return GestureDetector(
+    final scheme = Theme.of(context).colorScheme;
+  final changed = report.updatedAt ?? report.submittedAt;
+  final isFresh = changed != null && lastFullSyncAt != null && changed.isAfter(lastFullSyncAt!);
+  return Semantics(
+      label: 'Meldung ${report.title}',
+      hint:
+          'Status ${report.status.displayName}, Priorität ${report.priority.displayName}',
+      button: true,
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: _getReportStatusColor(report.status),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isSelected ? colorScheme.primary : Colors.white,
-            width: isSelected ? 3 : 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
+  child: GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+    if (isFresh)
+      _PulsingHalo(color: scheme.secondary.withOpacity(0.6)),
+            Container(
+              decoration: BoxDecoration(
+                color: colorForReportStatus(scheme, report.status),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected ? scheme.primary : Colors.white,
+                  width: isSelected ? 3 : 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.alphaFrac(0.3),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Icon(
+                _getReportCategoryIcon(report.category),
+                color: Colors.white,
+                size: isSelected ? 24 : 20,
+              ),
+            ),
+            // Prioritäts-Punkt rechts oben
+            Positioned(
+              top: -2,
+              right: -2,
+              child: Container(
+                width: 14,
+                height: 14,
+                decoration: BoxDecoration(
+                  color: colorForReportPriority(scheme, report.priority),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+              ),
             ),
           ],
         ),
-        child: Icon(
-          _getReportCategoryIcon(report.category),
-          color: Colors.white,
-          size: isSelected ? 24 : 20,
-        ),
       ),
     );
-  }
-
-  Color _getReportStatusColor(ReportStatus status) {
-    switch (status) {
-      case ReportStatus.submitted:
-      case ReportStatus.received:
-        return Colors.blue;
-      case ReportStatus.inProgress:
-        return Colors.orange;
-      case ReportStatus.resolved:
-      case ReportStatus.closed:
-        return Colors.green;
-      case ReportStatus.rejected:
-        return Colors.red;
-    }
   }
 
   IconData _getReportCategoryIcon(ReportCategory category) {
@@ -370,7 +389,7 @@ class _GenericMarker extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.alphaFrac(0.3),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
@@ -378,6 +397,54 @@ class _GenericMarker extends StatelessWidget {
         ),
         child: Icon(icon, color: Colors.white, size: isSelected ? 24 : 20),
       ),
+    );
+  }
+}
+
+class _PulsingHalo extends StatefulWidget {
+  final Color color;
+  const _PulsingHalo({required this.color});
+  @override
+  State<_PulsingHalo> createState() => _PulsingHaloState();
+}
+
+class _PulsingHaloState extends State<_PulsingHalo>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _ctrl,
+      builder: (context, child) {
+        final scale = 1.0 + (_ctrl.value * 0.8);
+        final opacity = (1 - _ctrl.value).clamp(0.0, 1.0);
+        return Transform.scale(
+          scale: scale,
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: widget.color.withOpacity(0.25 * opacity),
+            ),
+          ),
+        );
+      },
     );
   }
 }

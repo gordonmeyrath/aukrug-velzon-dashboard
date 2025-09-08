@@ -1,0 +1,92 @@
+[
+    {
+        "id": "p1",
+        "authorId": "u1",
+        "content": "Frühjahrsputz im Park – danke an alle Helfer!",
+        "mediaUrls": [],
+        "createdAt": "2025-09-03T10:00:00Z",
+        "likesCount": 12,
+        "commentsCount": 3
+    },
+    {
+        "id": "p2",
+        "authorId": "u2",
+        "content": "Neue Radroute entdeckt – herrliche Aussicht",
+        "mediaUrls": [],
+        "createdAt": "2025-09-02T16:30:00Z",
+        "likesCount": 8,
+        "commentsCount": 1
+    },
+    {
+        "id": "p3",
+        "authorId": "u3",
+        "content": "Sprechstunde Rathaus morgen 9–12 Uhr",
+        "mediaUrls": [],
+        "createdAt": "2025-09-01T08:00:00Z",
+        "likesCount": 5,
+        "commentsCount": 0
+    },
+    {
+        "id": "p4",
+        "authorId": "u4",
+        "content": "Wer hat Interesse am Programmier-Stammtisch?",
+        "mediaUrls": [],
+        "createdAt": "2025-08-30T19:10:00Z",
+        "likesCount": 9,
+        "commentsCount": 4
+    },
+    {
+        "id": "p5",
+        "authorId": "u5",
+        "content": "Fotos vom Wochenende im Naturpark",
+        "mediaUrls": [],
+        "createdAt": "2025-08-29T11:45:00Z",
+        "likesCount": 14,
+        "commentsCount": 6
+    },
+    {
+        "id": "p6",
+        "authorId": "u1",
+        "content": "Vorschläge für Bürgerprojekt willkommen",
+        "mediaUrls": [],
+        "createdAt": "2025-08-28T09:20:00Z",
+        "likesCount": 3,
+        "commentsCount": 2
+    },
+    {
+        "id": "p7",
+        "authorId": "u2",
+        "content": "Reparatur am Radweg abgeschlossen",
+        "mediaUrls": [],
+        "createdAt": "2025-08-27T17:05:00Z",
+        "likesCount": 6,
+        "commentsCount": 1
+    },
+    {
+        "id": "p8",
+        "authorId": "u3",
+        "content": "Neue Mitteilung zur Baustelle online",
+        "mediaUrls": [],
+        "createdAt": "2025-08-26T07:55:00Z",
+        "likesCount": 2,
+        "commentsCount": 0
+    },
+    {
+        "id": "p9",
+        "authorId": "u4",
+        "content": "Marktplatz-App Update demnächst",
+        "mediaUrls": [],
+        "createdAt": "2025-08-25T20:40:00Z",
+        "likesCount": 4,
+        "commentsCount": 1
+    },
+    {
+        "id": "p10",
+        "authorId": "u5",
+        "content": "Herbstspaziergang empfohlen!",
+        "mediaUrls": [],
+        "createdAt": "2025-08-24T13:30:00Z",
+        "likesCount": 7,
+        "commentsCount": 0
+    }
+]

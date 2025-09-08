@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../core/theme/color_extensions.dart';
 import '../../data/auth_service.dart';
 
 /// DSGVO-konformes User Profile Widget
@@ -27,7 +28,7 @@ class UserProfileWidget extends ConsumerWidget {
 
   Widget _buildGuestProfile(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -51,7 +52,7 @@ class UserProfileWidget extends ConsumerWidget {
           Text(
             'Anonym',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.alphaFrac(0.7),
             ),
           ),
           const SizedBox(height: 16),
@@ -68,29 +69,27 @@ class UserProfileWidget extends ConsumerWidget {
   Widget _buildUserProfile(BuildContext context, WidgetRef ref, user) {
     final theme = Theme.of(context);
     final isAnonymous = user.isAnonymous;
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundColor: isAnonymous 
-              ? theme.colorScheme.surfaceVariant
-              : theme.colorScheme.primaryContainer,
+            backgroundColor: isAnonymous
+                ? theme.colorScheme.surfaceContainerHighest
+                : theme.colorScheme.primaryContainer,
             child: Icon(
               isAnonymous ? Icons.visibility_off : Icons.person,
               size: 30,
-              color: isAnonymous 
-                ? theme.colorScheme.onSurfaceVariant
-                : theme.colorScheme.onPrimaryContainer,
+              color: isAnonymous
+                  ? theme.colorScheme.onSurfaceVariant
+                  : theme.colorScheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            isAnonymous 
-              ? 'Anonymer Nutzer'
-              : (user.displayName ?? 'Benutzer'),
+            isAnonymous ? 'Anonymer Nutzer' : (user.displayName ?? 'Benutzer'),
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -99,27 +98,23 @@ class UserProfileWidget extends ConsumerWidget {
             Text(
               user.email,
               style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.alphaFrac(0.7),
               ),
             ),
           const SizedBox(height: 16),
-          
+
           // Privacy Status Indicator
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.alphaFrac(0.1),
               border: Border.all(color: Colors.green),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.security,
-                  size: 16,
-                  color: Colors.green,
-                ),
+                Icon(Icons.security, size: 16, color: Colors.green),
                 const SizedBox(width: 4),
                 Text(
                   'DSGVO-konform',
@@ -131,9 +126,9 @@ class UserProfileWidget extends ConsumerWidget {
               ],
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Action Buttons
           Row(
             children: [
@@ -187,7 +182,7 @@ class UserProfileWidget extends ConsumerWidget {
     if (confirmed == true) {
       await ref.read(authServiceProvider).signOut();
       ref.invalidate(currentUserProvider);
-      
+
       if (context.mounted) {
         context.go('/welcome');
       }

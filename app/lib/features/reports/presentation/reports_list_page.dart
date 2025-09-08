@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/color_extensions.dart';
+import '../../../core/widgets/app_scaffold.dart';
 import '../domain/report.dart';
 import 'reports_provider.dart';
 
@@ -54,24 +57,18 @@ class _ReportsListPageState extends ConsumerState<ReportsListPage> {
   Widget build(BuildContext context) {
     final reportsAsync = ref.watch(reportsSearchProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meldungen'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.map),
-            onPressed: () {
-              Navigator.pushNamed(context, '/resident/reports/map');
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Navigator.pushNamed(context, '/resident/report');
-            },
-          ),
-        ],
-      ),
+    return AppScaffold(
+      title: 'Meldungen',
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.map),
+          onPressed: () => context.go('/resident/reports/map'),
+        ),
+        IconButton(
+          icon: const Icon(Icons.add),
+          onPressed: () => context.go('/resident/report'),
+        ),
+      ],
       body: Column(
         children: [
           // Search and Filter Bar
@@ -440,7 +437,7 @@ class _StatusChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.2),
+        color: _getStatusColor(status).alphaFrac(0.2),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
