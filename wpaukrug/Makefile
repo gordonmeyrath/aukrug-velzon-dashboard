@@ -2,7 +2,7 @@
 # Aukrug Workspace - Git Sync Makefile
 # =============================================================================
 
-.PHONY: status pull-all push-all sync-all set-branch help test
+.PHONY: status pull-all push-all sync-all set-branch help test push-mirror pull-mirror
 
 # Get current branch name
 CURRENT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
@@ -37,27 +37,52 @@ status: ## Show git status, remotes and recent commits
 	@git fetch origin --dry-run 2>/dev/null && echo "✅ Origin reachable" || echo "❌ Origin not reachable"
 	@git fetch mirror --dry-run 2>/dev/null && echo "✅ Mirror reachable" || echo "❌ Mirror not reachable"
 
-pull-all: ## Pull latest changes from both remotes with rebase
-	@echo "$(BLUE)📥 Pulling from all remotes...$(RESET)"
-	@echo "Fetching from origin..."
-	@git fetch origin || (echo "$(RED)❌ Failed to fetch from origin$(RESET)" && exit 1)
+pull-all: ## Pull latest changes from available remotes with rebase
+	@echo "$(BLUE)📥 Pulling from available remotes...$(RESET)"
 	@echo "Fetching from mirror..."
 	@git fetch mirror || (echo "$(RED)❌ Failed to fetch from mirror$(RESET)" && exit 1)
-	@echo "Pulling with rebase from origin..."
-	@git pull --rebase origin $(CURRENT_BRANCH) || (echo "$(RED)❌ Rebase failed from origin. Resolve conflicts manually and run 'git rebase --continue'$(RESET)" && exit 1)
+	@if git fetch origin 2>/dev/null; then \
+		echo "Fetching from origin..."; \
+		echo "Pulling with rebase from origin..."; \
+		git pull --rebase origin $(CURRENT_BRANCH) || (echo "$(RED)❌ Rebase failed from origin. Resolve conflicts manually and run 'git rebase --continue'$(RESET)" && exit 1); \
+	else \
+		echo "$(YELLOW)⚠️  Origin not available, using mirror only$(RESET)"; \
+		echo "Pulling with rebase from mirror..."; \
+		git pull --rebase mirror $(CURRENT_BRANCH) || (echo "$(RED)❌ Rebase failed from mirror. Resolve conflicts manually and run 'git rebase --continue'$(RESET)" && exit 1); \
+	fi
 	@echo "$(GREEN)✅ Pull completed successfully$(RESET)"
 
-push-all: ## Push current branch and tags to both remotes
-	@echo "$(BLUE)📤 Pushing to all remotes...$(RESET)"
-	@echo "Pushing branch $(CURRENT_BRANCH) to origin..."
-	@git push -u origin $(CURRENT_BRANCH) || (echo "$(RED)❌ Failed to push to origin$(RESET)" && exit 1)
+push-all: ## Push current branch and tags to available remotes
+	@echo "$(BLUE)📤 Pushing to available remotes...$(RESET)"
 	@echo "Pushing branch $(CURRENT_BRANCH) to mirror..."
 	@git push -u mirror $(CURRENT_BRANCH) || (echo "$(RED)❌ Failed to push to mirror$(RESET)" && exit 1)
-	@echo "Syncing tags to origin..."
-	@git push origin --tags || (echo "$(RED)❌ Failed to sync tags to origin$(RESET)" && exit 1)
 	@echo "Syncing tags to mirror..."
 	@git push mirror --tags || (echo "$(RED)❌ Failed to sync tags to mirror$(RESET)" && exit 1)
+	@if git fetch origin 2>/dev/null; then \
+		echo "Pushing branch $(CURRENT_BRANCH) to origin..."; \
+		git push -u origin $(CURRENT_BRANCH) || echo "$(YELLOW)⚠️  Failed to push to origin$(RESET)"; \
+		echo "Syncing tags to origin..."; \
+		git push origin --tags || echo "$(YELLOW)⚠️  Failed to sync tags to origin$(RESET)"; \
+	else \
+		echo "$(YELLOW)⚠️  Origin not available, skipping$(RESET)"; \
+	fi
 	@echo "$(GREEN)✅ Push completed successfully$(RESET)"
+
+push-mirror: ## Push current branch and tags only to mirror
+	@echo "$(BLUE)📤 Pushing to mirror only...$(RESET)"
+	@echo "Pushing branch $(CURRENT_BRANCH) to mirror..."
+	@git push -u mirror $(CURRENT_BRANCH) || (echo "$(RED)❌ Failed to push to mirror$(RESET)" && exit 1)
+	@echo "Syncing tags to mirror..."
+	@git push mirror --tags || (echo "$(RED)❌ Failed to sync tags to mirror$(RESET)" && exit 1)
+	@echo "$(GREEN)✅ Mirror sync completed successfully$(RESET)"
+
+pull-mirror: ## Pull from mirror only
+	@echo "$(BLUE)📥 Pulling from mirror only...$(RESET)"
+	@echo "Fetching from mirror..."
+	@git fetch mirror || (echo "$(RED)❌ Failed to fetch from mirror$(RESET)" && exit 1)
+	@echo "Pulling with rebase from mirror..."
+	@git pull --rebase mirror $(CURRENT_BRANCH) || (echo "$(RED)❌ Rebase failed from mirror. Resolve conflicts manually and run 'git rebase --continue'$(RESET)" && exit 1)
+	@echo "$(GREEN)✅ Mirror pull completed successfully$(RESET)"
 
 test: ## Run tests if available (Flutter, npm, etc.)
 	@echo "$(BLUE)🧪 Running tests...$(RESET)"
