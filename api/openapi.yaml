@@ -1,0 +1,433 @@
+openapi: 3.1.0
+info:
+  title: Aukrug API
+  description: Backend API for Aukrug marketplace platform
+  version: 1.0.0
+  contact:
+    name: Aukrug Team
+    url: https://aukrug.mioconnex.com
+  license:
+    name: MIT
+    
+servers:
+  - url: https://api.aukrug.mioconnex.com/api
+    description: Production server
+  - url: http://127.0.0.1:4000/api  
+    description: Development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        role:
+          type: string
+          enum: [user, admin]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, email, name, role]
+      
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        ownerId:
+          type: string
+          format: uuid
+        isDemo:
+          type: boolean
+          default: false
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, title, ownerId]
+      
+    Listing:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        price:
+          type: number
+          format: float
+          minimum: 0
+        status:
+          type: string
+          enum: [draft, active, sold]
+          default: draft
+        ownerId:
+          type: string
+          format: uuid
+        isDemo:
+          type: boolean
+          default: false
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [id, title, ownerId, status]
+      
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+        user:
+          $ref: '#/components/schemas/User'
+      required: [access_token, refresh_token, expires_in, user]
+      
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          default: about:blank
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+      required: [title, status]
+
+security:
+  - bearerAuth: []
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      tags: [System]
+      security: []
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /auth/register:
+    post:
+      summary: Register new user
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                name:
+                  type: string
+                password:
+                  type: string
+                  minLength: 8
+              required: [email, name, password]
+            example:
+              email: user@example.com
+              name: John Doe
+              password: SecurePass123!
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: User already exists
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /auth/login:
+    post:
+      summary: Login user
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required: [email, password]
+            example:
+              email: admin@example.com
+              password: ChangeMe!123
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /auth/refresh:
+    post:
+      summary: Refresh access token
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refresh_token:
+                  type: string
+              required: [refresh_token]
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid refresh token
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /items:
+    get:
+      summary: List user items
+      tags: [Items]
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+                    
+    post:
+      summary: Create new item
+      tags: [Items]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  maxLength: 200
+                description:
+                  type: string
+              required: [title]
+            example:
+              title: Demo Item
+              description: This is a demo item
+      responses:
+        '201':
+          description: Item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /marketplace/listings:
+    get:
+      summary: List marketplace listings
+      tags: [Marketplace]
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, active, sold]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of listings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  listings:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Listing'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+                    
+    post:
+      summary: Create new listing
+      tags: [Marketplace]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  maxLength: 200
+                description:
+                  type: string
+                price:
+                  type: number
+                  format: float
+                  minimum: 0
+                status:
+                  type: string
+                  enum: [draft, active]
+                  default: draft
+              required: [title]
+            example:
+              title: Demo Listing
+              description: This is a demo listing
+              price: 29.99
+              status: active
+      responses:
+        '201':
+          description: Listing created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Listing'
+        '400':
+          description: Invalid input
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+tags:
+  - name: System
+    description: System endpoints
+  - name: Authentication
+    description: Authentication & authorization
+  - name: Items
+    description: User item management
+  - name: Marketplace
+    description: Marketplace listings
