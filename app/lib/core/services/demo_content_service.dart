@@ -245,6 +245,48 @@ class DemoContentService {
     };
   }
 
+  /// Gordon Meyrath Demo User für Developer Testing
+  static Map<String, dynamic> getGordonDemoUser() {
+    return {
+      'id': 'gordon_dev_001',
+      'email': 'gordonmeyrath@aukrug.de',
+      'displayName': 'Gordon Meyrath',
+      'isAnonymous': false,
+      'createdAt': DateTime.now()
+          .subtract(const Duration(days: 5))
+          .toIso8601String(),
+      'lastLoginAt': DateTime.now().toIso8601String(),
+      'preferences': {
+        'theme': 'system',
+        'language': 'de',
+        'locationAccuracy': 'high',
+        'imageQuality': 'high',
+        'enableNotifications': true,
+        'allowOfflineMode': true,
+      },
+      'privacySettings': {
+        'consentToLocationProcessing': true,
+        'consentToPhotoProcessing': true,
+        'consentToAnalytics': true,
+        'consentToMarketing': false,
+        'allowReportSubmission': true,
+        'allowLocationTracking': true,
+        'allowUsageAnalytics': true,
+        'allowPersonalization': true,
+        'dataRetentionPeriod': 'twoYears',
+        'autoDeleteOldReports': false,
+        'anonymizeOldData': false,
+        'allowEmailContact': true,
+        'allowPhoneContact': true,
+        'consentGivenAt': DateTime.now()
+            .subtract(const Duration(days: 5))
+            .toIso8601String(),
+      },
+      'isDeveloper': true,
+      'isDemo': true,
+    };
+  }
+
   /// DSGVO-konforme Demo-Daten für Privacy-Testing
   static Map<String, dynamic> getDemoPrivacyData() {
     return {
