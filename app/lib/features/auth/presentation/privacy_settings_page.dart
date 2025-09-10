@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/color_extensions.dart';
-import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/widgets/clean_app_scaffold.dart';
 import '../domain/user.dart';
 import 'controllers/privacy_settings_controller.dart';
 

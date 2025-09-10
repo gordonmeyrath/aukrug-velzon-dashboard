@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/color_extensions.dart';
-import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../core/widgets/clean_app_scaffold.dart';
 import '../../../reports/domain/report.dart';
 import '../../../reports/presentation/reports_provider.dart';
 import '../widgets/aukrug_map.dart';

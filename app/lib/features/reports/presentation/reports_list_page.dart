@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/color_extensions.dart';
-import '../../../core/widgets/app_scaffold.dart';
+import '../../../core/widgets/clean_app_scaffold.dart';
 import '../domain/report.dart';
 import 'reports_provider.dart';
 

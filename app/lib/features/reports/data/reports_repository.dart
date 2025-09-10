@@ -6,9 +6,10 @@ import 'dart:math' as math;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:isar/isar.dart';
 import 'package:meta/meta.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart' if (dart.library.html) '../../../core/storage/web_path_stub.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/error/app_error.dart';
@@ -465,7 +466,7 @@ class ReportsRepository {
         }
       }
 
-      // 2. Fallback: Local submission (demo mode)
+      // 2. Fallback: Local submission (offline mode)
       final submittedReport = report.copyWith(
         id: DateTime.now().millisecondsSinceEpoch,
         submittedAt: DateTime.now(),
@@ -669,7 +670,7 @@ class ReportsRepository {
     double lat2,
     double lon2,
   ) {
-    // Vereinfachte Distanzberechnung (für Demo ausreichend)
+    // Vereinfachte Distanzberechnung (Haversine-Formel)
     const double earthRadius = 6371; // km
 
     final dLat = _degreesToRadians(lat2 - lat1);

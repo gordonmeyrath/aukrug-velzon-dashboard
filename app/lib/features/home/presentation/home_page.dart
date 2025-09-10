@@ -80,7 +80,6 @@ class HomePage extends ConsumerWidget {
 
           const SizedBox(height: 24),
 
-          // Hinweis: (DemoStatusWidget ehemals in AppScaffold entfernt)
           const SizedBox(height: 16),
 
           // Hauptfunktionen

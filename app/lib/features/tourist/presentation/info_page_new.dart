@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/widgets/app_scaffold.dart';
+import '../../../../core/widgets/clean_app_scaffold.dart';
 import '../data/info_api_repository.dart';
 
 class InfoPage extends ConsumerWidget {

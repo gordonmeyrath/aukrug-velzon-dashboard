@@ -270,8 +270,7 @@ class DocumentCard extends StatelessWidget {
 
   Future<void> _downloadDocument(BuildContext context) async {
     try {
-      // In einer echten App würde hier der Download stattfinden
-      // Für das Demo zeigen wir eine Snackbar
+      // TODO: Implement actual document download from server
       if (document.requiresAuthentication) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

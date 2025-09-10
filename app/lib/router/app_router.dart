@@ -13,7 +13,6 @@ import '../features/home/presentation/home_page.dart';
 import '../features/map/presentation/pages/reports_map_page.dart';
 import '../features/notices/presentation/notices_list_page.dart';
 import '../features/places/presentation/places_list_page.dart';
-import '../features/reports/presentation/demo_reports_list_page.dart';
 import '../features/reports/presentation/report_issue_page.dart';
 import '../features/reports/presentation/reports_unified_page.dart';
 import '../features/resident/presentation/settings_page.dart';
@@ -76,10 +75,10 @@ GoRouter appRouter(AppRouterRef ref) {
         builder: (context, state) => const PrivacySettingsPage(),
       ),
 
-      // Demo Reports (für Simulator Testing)
+      // Production Reports
       GoRoute(
         path: '/reports',
-        builder: (context, state) => const DemoReportsListPage(),
+        builder: (context, state) => const ReportsUnifiedPage(),
       ),
 
       // Tourist Shell

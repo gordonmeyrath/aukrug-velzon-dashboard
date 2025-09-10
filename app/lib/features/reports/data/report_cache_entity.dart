@@ -7,8 +7,8 @@ part 'report_cache_entity.g.dart';
 /// Persistenter Offline-Cache für Reports
 @Collection()
 class ReportCacheEntity {
-  /// Primärschlüssel = Report-ID (bereits eindeutig)
-  Id id = Isar.autoIncrement; // Kleinere, automatische IDs
+  /// Web-kompatible ID (kleine Zahlen für JavaScript)
+  Id id = 1; // Startet bei 1, Web-kompatibel
   late String title;
   late String description;
   int categoryIndex; // enum index
@@ -27,7 +27,7 @@ class ReportCacheEntity {
   List<String>? imageUrls; // stored as list
 
   ReportCacheEntity({
-    this.id = Isar.autoIncrement,
+    this.id = 0,
     required this.title,
     required this.description,
     required this.categoryIndex,

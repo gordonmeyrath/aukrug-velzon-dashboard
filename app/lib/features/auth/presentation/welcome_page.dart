@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/color_extensions.dart';
-import '../../../core/services/demo_content_service.dart';
+import '../../../core/theme/color_extensions.dart';
 import '../../../core/widgets/loading_widget.dart';
 import '../data/auth_service.dart';
 
-/// DSGVO-konforme Welcome Page mit anonymer und E-Mail-basierter Anmeldung
+/// Production-ready DSGVO-konforme Welcome Page
 class WelcomePage extends ConsumerWidget {
   const WelcomePage({super.key});
 
@@ -15,24 +14,22 @@ class WelcomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(currentUserProvider);
 
-    return DemoBanner(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        body: SafeArea(
-          child: authState.when(
-            data: (user) {
-              if (user != null) {
-                // User ist bereits angemeldet, weiterleiten
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  context.go('/reports');
-                });
-                return const Center(child: CircularProgressIndicator());
-              }
-              return _buildWelcomeContent(context, ref);
-            },
-            loading: () => const LoadingWidget(),
-            error: (error, stack) => _buildWelcomeContent(context, ref),
-          ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      body: SafeArea(
+        child: authState.when(
+          data: (user) {
+            if (user != null) {
+              // User ist bereits angemeldet, weiterleiten
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                context.go('/home');
+              });
+              return const Center(child: CircularProgressIndicator());
+            }
+            return _buildWelcomeContent(context, ref);
+          },
+          loading: () => const LoadingWidget(),
+          error: (error, stack) => _buildWelcomeContent(context, ref),
         ),
       ),
     );
@@ -54,11 +51,6 @@ class WelcomePage extends ConsumerWidget {
           ),
           child: Column(
             children: [
-              // Demo Notice
-              const DemoPrivacyNotice(),
-
-              const SizedBox(height: 16),
-
               // App Logo und Titel
               Icon(
                 Icons.location_city,
@@ -67,23 +59,26 @@ class WelcomePage extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
-              // Demo Status Widget
-              const DemoStatusWidget(),
-
-              const SizedBox(height: 12),
-
-              // Demo Navigation Button
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: ElevatedButton(
-                  onPressed: () => context.go('/reports'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
-                  ),
-                  child: const Text('📋 Demo Berichte ansehen'),
+              Text(
+                'Willkommen in Aukrug',
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer,
+                  fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
+
+              const SizedBox(height: 16),
+
+              Text(
+                'Ihre digitale Verbindung zur Gemeinde',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              const SizedBox(height: 32),
 
               // Hauptmenü Button
               Padding(

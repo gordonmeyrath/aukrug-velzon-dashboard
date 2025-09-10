@@ -23,7 +23,7 @@ class MarketplaceRepository {
   /// Get single listing with error handling
   Future<MarketplaceListing?> getListing(int id) async {
     try {
-      return await _apiClient.getListing(id.toString());
+      return await _apiClient.getListing(id);
     } catch (e) {
       return null; // Listing doesn't exist or was deleted
     }

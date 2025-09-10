@@ -361,7 +361,7 @@ class _AdaptiveSideNavigation extends ConsumerWidget {
 
     return NavigationRail(
       backgroundColor: Theme.of(context).colorScheme.surface,
-      elevation: 0,
+      elevation: null,
       labelType: NavigationRailLabelType.all,
       selectedIndex: currentIdx,
       groupAlignment: -1.0,
